@@ -1,0 +1,25 @@
+{
+  "files.exclude": {
+    "**/node_modules/": true,
+    "local-dev": true,
+    "apps/": true,
+    "packages/": true,
+    "pnpm-lock.yaml": true,
+    "pnpm-workspace.yaml": true,
+    ".gitignore": true,
+    "next-env.d.ts": true,
+    ".next": true,
+    ".prettierrc.json": true,
+    "rome.json": true
+  },
+  "search.exclude": {
+    "**/node_modules/": true,
+    "apps/": true,
+    "packages/": true,
+    "local-dev": true
+  },
+  "editor.tabSize": 2,
+  "rewrap.autoWrap.enabled": true,
+  "rewrap.wrappingColumn": 80,
+  "typescript.preferences.importModuleSpecifier": "non-relative"
+}

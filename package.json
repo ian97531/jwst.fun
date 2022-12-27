@@ -3,19 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node ./local-dev/server.js",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cert": "rm -rf local-dev/https-cert; mkdir -p local-dev/https-cert; mkcert -install; cd local-dev/https-cert; mkcert jwst.dev;",
+    "hosts": "(grep \"jwst.dev\" /private/etc/hosts &> /dev/null && echo \"Your /private/etc/hosts file already has an entry for jwst.dev.\") || (echo \"127.0.0.1    jwst.dev\" >> /private/etc/hosts && echo \"Updated your /private/etc/hosts file to include jwst.dev\")"
   },
   "dependencies": {
     "@next/font": "13.1.1",
-    "@types/node": "18.11.18",
-    "@types/react": "18.0.26",
-    "@types/react-dom": "18.0.10",
     "next": "13.1.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "4.9.4"
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.10",
+    "prettier": "^2.8.1",
+    "rome": "^11.0.0",
+    "typescript": "^4.9.4"
   }
 }
