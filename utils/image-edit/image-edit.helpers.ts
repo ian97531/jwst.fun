@@ -1,9 +1,4 @@
-import * as Comlink from 'comlink';
-
-import { Limelight } from '@next/font/google';
-
-import { hslToRgb } from '../color/color.helpers';
-import { clamp } from '../number/number.helpers';
+import { hslToRgb } from 'utils/color/color.helpers';
 
 export const createRandomGrayscaleImageData = (
   width: number,
@@ -41,3 +36,5 @@ export const colorizeImageData = (
 
   return new ImageData(arr, width, height);
 };
+
+const decodeTiff = () => {};

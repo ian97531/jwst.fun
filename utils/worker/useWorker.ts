@@ -1,8 +1,7 @@
-import { releaseProxy, Remote, wrap } from 'comlink';
-import { useEffect, useMemo, useRef, useState } from 'react';
-
-import { Runtime } from '../runtime/runtime.constants';
-import { getRuntime, isDomRuntime } from '../runtime/runtime.helpers';
+import { Remote, wrap } from 'comlink';
+import { useMemo } from 'react';
+import { Runtime } from 'utils/runtime/runtime.constants';
+import { getRuntime, isDomRuntime } from 'utils/runtime/runtime.helpers';
 
 export function useWorker<WorkerApi>(
   createWorker: () => Worker

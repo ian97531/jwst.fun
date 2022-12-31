@@ -1,7 +1,5 @@
-import * as Comlink from 'comlink';
-import { useRef } from 'react';
+import { useWorker } from 'utils/worker/useWorker';
 
-import { useWorker } from '../worker/useWorker';
 import { ImageEditWorker } from './image-edit.worker';
 
 export const useImageEditWorker = () => {
