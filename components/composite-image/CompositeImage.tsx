@@ -72,6 +72,7 @@ const CompositeImage = (props: Props) => {
         meshRef.current.translateX(evt.movementX / 160);
         meshRef.current.translateY(evt.movementY / -160);
         invalidate();
+        evt.preventDefault();
       }
     },
     [invalidate]
@@ -83,16 +84,18 @@ const CompositeImage = (props: Props) => {
     onDragEnd();
   }, [onDragEnd]);
 
-  const startDrag = useCallback(() => {
-    window.addEventListener("pointermove", handleDrag);
-    window.addEventListener("pointerup", endDrag);
-    onDragStart();
-  }, [onDragStart]);
+  const startDrag = useCallback(
+    (evt: ThreeEvent<PointerEvent>) => {
+      evt.nativeEvent.preventDefault();
+      window.addEventListener("pointermove", handleDrag);
+      window.addEventListener("pointerup", endDrag);
+      onDragStart();
+    },
+    [onDragStart]
+  );
 
   useEffect(() => {
     const handleWheel = (evt: WheelEvent) => {
-      evt.stopPropagation();
-      evt.preventDefault();
       if (meshRef.current) {
         meshRef.current.scale.multiplyScalar(1 + evt.deltaY / 5000);
         invalidate();

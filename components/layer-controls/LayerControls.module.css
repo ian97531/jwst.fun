@@ -1,0 +1,9 @@
+.LayerControls {
+  display: grid;
+  grid-template-columns: min-content auto;
+  grid-auto-flow: row;
+  grid-auto-rows: auto;
+  gap: 15px;
+  color: var(--whiteA12);
+  padding: var(--nav-padding);
+}

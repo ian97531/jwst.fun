@@ -14,6 +14,7 @@
     "@next/font": "13.1.1",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/react-slider": "^1.1.0",
+    "@react-spring/web": "^9.6.1",
     "@react-three/drei": "^9.48.5",
     "@react-three/fiber": "^8.9.2",
     "clsx": "^1.2.1",

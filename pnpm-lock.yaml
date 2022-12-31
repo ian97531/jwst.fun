@@ -4,6 +4,7 @@ specifiers:
   '@next/font': 13.1.1
   '@radix-ui/colors': ^0.1.8
   '@radix-ui/react-slider': ^1.1.0
+  '@react-spring/web': ^9.6.1
   '@react-three/drei': ^9.48.5
   '@react-three/fiber': ^8.9.2
   '@types/node': ^18.11.18
@@ -26,6 +27,7 @@ dependencies:
   '@next/font': 13.1.1
   '@radix-ui/colors': 0.1.8
   '@radix-ui/react-slider': 1.1.0_biqbaboplfbrettd7655fr4n2y
+  '@react-spring/web': 9.6.1_biqbaboplfbrettd7655fr4n2y
   '@react-three/drei': 9.48.5_3hu7kgrmcayjixsk5pclh3mk6y
   '@react-three/fiber': 8.9.2_4tzez3c2xpzuefjrvhpyy55bva
   clsx: 1.2.1
@@ -406,6 +408,20 @@ packages:
 
   /@react-spring/types/9.6.1:
     resolution: {integrity: sha512-POu8Mk0hIU3lRXB3bGIGe4VHIwwDsQyoD1F394OK7STTiX9w4dG3cTLljjYswkQN+hDSHRrj4O36kuVa7KPU8Q==}
+    dev: false
+
+  /@react-spring/web/9.6.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-X2zR6q2Z+FjsWfGAmAXlQaoUHbPmfuCaXpuM6TcwXPpLE1ZD4A1eys/wpXboFQmDkjnrlTmKvpVna1MjWpZ5Hw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@react-spring/animated': 9.6.1_react@18.2.0
+      '@react-spring/core': 9.6.1_react@18.2.0
+      '@react-spring/shared': 9.6.1_react@18.2.0
+      '@react-spring/types': 9.6.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /@react-three/drei/9.48.5_3hu7kgrmcayjixsk5pclh3mk6y:

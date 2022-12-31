@@ -1,0 +1,9 @@
+.Sidebar {
+  backdrop-filter: var(--nav-backdrop);
+  display: flex;
+  flex-direction: column;
+  border-left: var(--nav-border);
+  flex-grow: 1;
+  width: fit-content;
+  align-content: flex-end;
+}

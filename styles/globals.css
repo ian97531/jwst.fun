@@ -1,6 +1,12 @@
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
+
+  --header-height: 70px;
+
+  --nav-border: 1px solid var(--whiteA10);
+  --nav-padding: calc(var(--header-height) / 3);
+  --nav-backdrop: blur(15px) contrast(50%) brightness(60%) grayscale(30%);
 }
 
 * {
@@ -19,7 +25,11 @@ body {
 }
 
 body {
+  background-color: black;
   font-family: inherit;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
 }
 
 a {

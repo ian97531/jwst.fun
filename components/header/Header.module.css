@@ -1,0 +1,27 @@
+.Header {
+  backdrop-filter: var(--nav-backdrop);
+  color: white;
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  width: 100vw;
+}
+
+.Header > * {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  border-bottom: var(--nav-border);
+  padding-left: var(--nav-padding);
+  padding-right: var(--nav-padding);
+}
+
+.logo {
+  border-right: var(--nav-border);
+  padding-left: calc(calc(var(--header-height) - 40px) / 2);
+  padding-right: calc(calc(var(--header-height) - 40px) / 2);
+}
+
+.title {
+  flex-grow: 1;
+}

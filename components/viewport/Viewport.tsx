@@ -17,7 +17,7 @@ const Viewport = (props: Props) => {
   const [isMouseOver, setIsMouseOver] = useState(false);
 
   return (
-    <div className={className}>
+    <section className={className}>
       <Canvas
         frameloop="demand"
         style={{
@@ -34,7 +34,7 @@ const Viewport = (props: Props) => {
           onPointerLeave={() => setIsMouseOver(false)}
         />
       </Canvas>
-    </div>
+    </section>
   );
 };
 
