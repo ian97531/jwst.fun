@@ -43,7 +43,7 @@ const CompositeImage = (props: Props) => {
 
   const [color_map] = useLoader(
     THREE.TextureLoader,
-    ["jw02731/f090w.png"],
+    ["https://dl4y979somvdi.cloudfront.net/jw02731/f090w.png"],
     (xhr) => {
       xhr.manager.onProgress = (url, loaded, total) =>
         console.log(url, loaded, total);
