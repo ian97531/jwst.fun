@@ -33,7 +33,8 @@ const Header = (props: Props) => {
     <header className={clsx(styles.Header, inconsolata.className, className)}>
       <div className={styles.logo} onPointerEnter={spin}>
         <animated.img
-          src="/hexagon.svg"
+          srcSet="/logo-small/jwst-logo.png, /logo-small/jwst-logo@2x.png 2x, /logo-small/jwst-logo@3x.png 3x"
+          src="/logo-small/jwst-logo@3x.png"
           alt="logo"
           width={40}
           height={40}
