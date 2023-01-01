@@ -1,17 +1,17 @@
 import CompositeImage from 'components/composite-image/CompositeImage';
+import { FilterConfig, Observation } from 'data/observations.types';
 import React, { useMemo, useRef, useState } from 'react';
 
 import { Canvas } from '@react-three/fiber';
 
 export type Props = {
   className?: string;
-  red: number;
-  green: number;
-  blue: number;
+  filterConfigs: Record<string, FilterConfig>;
+  observation: Observation;
 };
 
 const Viewport = (props: Props) => {
-  const { className, red, green, blue } = props;
+  const { className, filterConfigs, observation } = props;
 
   const [isDragging, setIsDragging] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
@@ -25,9 +25,8 @@ const Viewport = (props: Props) => {
         }}
       >
         <CompositeImage
-          red={red}
-          green={green}
-          blue={blue}
+          filterConfigs={filterConfigs}
+          observation={observation}
           onDragStart={() => setIsDragging(true)}
           onDragEnd={() => setIsDragging(false)}
           onPointerEnter={() => setIsMouseOver(true)}

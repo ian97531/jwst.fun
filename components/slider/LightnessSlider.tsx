@@ -7,18 +7,18 @@ import styles from './Slider.module.css';
 
 export type Props = Omit<RadixSlider.SliderProps, "value" | "onValueChange"> & {
   className?: string;
-  hue: number;
-  saturation: number;
-  lightness: number;
+  hueDegrees: number;
+  saturationPercent: number;
+  lightnessPercent: number;
   onLightnessChange: (value: number) => void;
 };
 
 const LightnessSlider = (props: Props) => {
   const {
     className,
-    hue,
-    saturation,
-    lightness,
+    hueDegrees,
+    saturationPercent,
+    lightnessPercent,
     onLightnessChange,
     min = 0,
     max = 100,
@@ -28,27 +28,27 @@ const LightnessSlider = (props: Props) => {
 
   const valueProps = useMemo(
     () => ({
-      value: [lightness],
+      value: [lightnessPercent],
       onValueChange: (value: number[]) => onLightnessChange(value[0]),
     }),
-    [lightness, onLightnessChange]
+    [lightnessPercent, onLightnessChange]
   );
 
   const trackStyle = useMemo(
     () => ({
       background: `linear-gradient(to right, 
-          hsl(${hue}, ${saturation}%, 0%) 0%, 
-          hsl(${hue}, ${saturation}%, 50%) 50%, 
-          hsl(${hue}, ${saturation}%, 100%) 100%)`,
+          hsl(${hueDegrees}, ${saturationPercent}%, 0%) 0%, 
+          hsl(${hueDegrees}, ${saturationPercent}%, 50%) 50%, 
+          hsl(${hueDegrees}, ${saturationPercent}%, 100%) 100%)`,
     }),
-    [hue, saturation]
+    [hueDegrees, saturationPercent]
   );
 
   const thumbStyle = useMemo(
     () => ({
-      backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
+      backgroundColor: `hsl(${hueDegrees}, ${saturationPercent}%, ${lightnessPercent}%)`,
     }),
-    [hue, saturation, lightness]
+    [hueDegrees, saturationPercent, lightnessPercent]
   );
 
   return (

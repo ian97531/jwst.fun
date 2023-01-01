@@ -6,7 +6,7 @@
 
   --nav-border: 1px solid var(--whiteA10);
   --nav-padding: calc(var(--header-height) / 3);
-  --nav-backdrop: blur(15px) contrast(50%) brightness(60%) grayscale(30%);
+  --nav-backdrop: blur(20px) contrast(50%) brightness(40%) grayscale(40%);
 }
 
 * {

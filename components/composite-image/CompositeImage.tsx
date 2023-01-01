@@ -1,34 +1,32 @@
+import { EMPTY_TEXTURE_URL } from 'components/composite-image/composite-image.constants';
+import {
+    buildColorUniforms, buildTextureUniforms
+} from 'components/composite-image/composite-image.helpers';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
-import { Canvas, ThreeEvent, useFrame, useLoader, useThree } from '@react-three/fiber';
+import { ThreeEvent, useFrame, useLoader, useThree } from '@react-three/fiber';
 
 import fragmentShader from './fragment-shader.glsl';
 import vertexShader from './vertex-shader.glsl';
 
+import type { FilterConfig, Observation } from "data/observations.types";
+import type { ShaderUniforms } from "components/composite-image/composite-image.types";
 export type Props = {
-  red: number;
-  green: number;
-  blue: number;
+  filterConfigs: Record<string, FilterConfig>;
+  observation: Observation;
   onDragStart: () => void;
   onDragEnd: () => void;
   onPointerEnter: (evt: ThreeEvent<PointerEvent>) => void;
   onPointerLeave: (evt: ThreeEvent<PointerEvent>) => void;
 };
 
-type Uniforms = {
-  u_layer_1: { value: THREE.Texture };
-  u_color: { value: [number, number, number, number] };
-};
-
 const INITIAL_SCALE = 0.001;
-const IMAGE_SIZE: [number, number] = [6943, 3997];
 
 const CompositeImage = (props: Props) => {
   const {
-    red,
-    green,
-    blue,
+    filterConfigs,
+    observation,
     onDragStart,
     onDragEnd,
     onPointerEnter,
@@ -41,28 +39,43 @@ const CompositeImage = (props: Props) => {
 
   const { invalidate, gl } = useThree();
 
-  const [color_map] = useLoader(
+  const [emptyTexture, ...filterTextures] = useLoader(
     THREE.TextureLoader,
-    ["https://dl4y979somvdi.cloudfront.net/jw02731/f090w.png"],
+    [
+      EMPTY_TEXTURE_URL,
+      ...observation.filters.map((filter) => filter.imageUrl),
+    ],
     (xhr) => {
       xhr.manager.onProgress = (url, loaded, total) =>
         console.log(url, loaded, total);
     }
   );
 
-  const uniforms = useMemo(
+  const shaderUniforms: ShaderUniforms = useMemo(
     () => ({
-      u_layer_1: { value: color_map },
-      u_color: { value: [red, green, blue, 1] },
+      ...buildTextureUniforms(filterTextures, emptyTexture),
+      ...buildColorUniforms(
+        observation.filters.map(({ name }) => filterConfigs[name])
+      ),
     }),
-    []
+    [] // No dependencies. Updates to the color uniforms are performed in useFrame.
   );
 
   useFrame(() => {
     const material = materialRef.current;
     if (material) {
-      const currentUniforms = material.uniforms as Uniforms;
-      currentUniforms.u_color.value = [red, green, blue, 1];
+      const newColorUniforms = buildColorUniforms(
+        observation.filters.map(({ name }) => filterConfigs[name])
+      );
+
+      console.log(newColorUniforms);
+      const currentUniforms = material.uniforms as ShaderUniforms;
+      currentUniforms.u_color_1.value = newColorUniforms.u_color_1.value;
+      currentUniforms.u_color_2.value = newColorUniforms.u_color_2.value;
+      currentUniforms.u_color_3.value = newColorUniforms.u_color_3.value;
+      currentUniforms.u_color_4.value = newColorUniforms.u_color_4.value;
+      currentUniforms.u_color_5.value = newColorUniforms.u_color_5.value;
+      currentUniforms.u_color_6.value = newColorUniforms.u_color_6.value;
     }
   });
 
@@ -114,11 +127,11 @@ const CompositeImage = (props: Props) => {
       ref={meshRef}
       scale={scaleRef.current}
     >
-      <planeGeometry args={IMAGE_SIZE} />
+      <planeGeometry args={observation.imageSizePixels} />
       <shaderMaterial
         ref={materialRef}
         fragmentShader={fragmentShader}
-        uniforms={uniforms}
+        uniforms={shaderUniforms}
         vertexShader={vertexShader}
       />
     </mesh>

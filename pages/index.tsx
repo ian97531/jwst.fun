@@ -1,27 +1,59 @@
+import FilterControls from 'components/filter-controls/FilterControls';
 import Header from 'components/header/Header';
-import LayerControls from 'components/layer-controls/LayerControls';
 import Sidebar from 'components/sidebar/Sidebar';
 import Viewport from 'components/viewport/Viewport';
+import { ObservationId, OBSERVATIONS } from 'data/observations.constants';
+import { FilterConfig } from 'data/observations.types';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import styles from 'styles/index.module.css';
-import { LayerSettings } from 'types/layer.types';
-import { hslToRgb } from 'utils/color/color.helpers';
 
-const INITIAL_LAYER_SETTINGS: LayerSettings = {
-  hue: 0,
-  saturation: 100,
-  lightness: 50,
-  opacity: 1,
-};
+const INITIAL_SELECTED_OBSERVATION_ID: ObservationId = "jw02731";
 
 export default function Home() {
-  const [layerSettings, setLayerSettings] = useState(INITIAL_LAYER_SETTINGS);
+  const [selectedObservationName, setSelectedObservationName] =
+    useState<ObservationId>(INITIAL_SELECTED_OBSERVATION_ID);
 
-  const [red, green, blue] = hslToRgb(
-    layerSettings.hue,
-    layerSettings.saturation,
-    layerSettings.lightness
+  const selectedObservation = OBSERVATIONS[selectedObservationName];
+
+  const [filterConfigs, setFilterControlConfigs] = useState(() =>
+    Object.fromEntries(
+      selectedObservation.filters.map(({ name, defaultConfig }) => [
+        name,
+        defaultConfig,
+      ])
+    )
+  );
+
+  const updateConfigForFilter = useCallback(
+    (name: string, updatedFilterConfig: FilterConfig) => {
+      setFilterControlConfigs((prev) => ({
+        ...prev,
+        [name]: updatedFilterConfig,
+      }));
+    },
+    []
+  );
+
+  const updateSelectedObservation = useCallback((name: string) => {
+    setSelectedObservationName(name);
+
+    const newFilterConfigs = Object.fromEntries(
+      OBSERVATIONS[name].filters.map(({ name, defaultConfig }) => [
+        name,
+        defaultConfig,
+      ])
+    );
+    setFilterControlConfigs(newFilterConfigs);
+  }, []);
+
+  const observationOptions = useMemo(
+    () =>
+      Object.values(OBSERVATIONS).map(
+        ({ name, imageSizePixels }) =>
+          `${name} - ${imageSizePixels[0]}px × ${imageSizePixels[1]}px`
+      ),
+    [OBSERVATIONS]
   );
 
   return (
@@ -38,21 +70,28 @@ export default function Home() {
 
       <main className={styles.main}>
         <nav className={styles.nav}>
-          <Header />
+          <Header
+            selectedObservation={selectedObservationName}
+            observations={OBSERVATIONS}
+            onSelectObservation={updateSelectedObservation}
+          />
 
           <Sidebar>
-            <LayerControls
-              layerSettings={layerSettings}
-              onUpdateLayerSettings={setLayerSettings}
-            />
+            {Object.entries(filterConfigs).map(([name, settings]) => (
+              <FilterControls
+                key={name}
+                name={name}
+                config={settings}
+                onUpdateConfig={updateConfigForFilter}
+              />
+            ))}
           </Sidebar>
         </nav>
 
         <Viewport
           className={styles.viewport}
-          red={red}
-          green={green}
-          blue={blue}
+          filterConfigs={filterConfigs}
+          observation={selectedObservation}
         />
       </main>
     </>

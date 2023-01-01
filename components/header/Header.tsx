@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { Observation } from 'data/observations.types';
 import React, { useCallback } from 'react';
 
 import { Inconsolata } from '@next/font/google';
@@ -10,10 +11,13 @@ const inconsolata = Inconsolata({ subsets: ["latin"] });
 
 export type Props = {
   className?: string;
+  observations: Record<string, Observation>;
+  onSelectObservation: (name: string) => void;
+  selectedObservation: string;
 };
 
 const Header = (props: Props) => {
-  const { className } = props;
+  const { className, observations, selectedObservation } = props;
 
   const [{ angle }, angleApi] = useSpring(() => ({
     angle: 0,
@@ -38,7 +42,9 @@ const Header = (props: Props) => {
           }}
         />
       </div>
-      <div className={styles.title}>JWST.fun 🔭</div>
+      <div className={styles.title}>
+        JWST.fun 🔭 {observations[selectedObservation].name}
+      </div>
     </header>
   );
 };

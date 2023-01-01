@@ -7,18 +7,18 @@ import styles from './Slider.module.css';
 
 export type Props = Omit<RadixSlider.SliderProps, "value" | "onValueChange"> & {
   className?: string;
-  hue: number;
-  saturation: number;
-  lightness: number;
-  onHueChange: (value: number) => void;
+  hueDegrees: number;
+  saturationPercent: number;
+  lightnessPercent: number;
+  onHueChange: (hueDegrees: number) => void;
 };
 
 const HueSlider = (props: Props) => {
   const {
     className,
-    hue,
-    saturation,
-    lightness,
+    hueDegrees,
+    saturationPercent,
+    lightnessPercent,
     onHueChange,
     min = 0,
     max = 360,
@@ -28,35 +28,35 @@ const HueSlider = (props: Props) => {
 
   const valueProps = useMemo(
     () => ({
-      value: [hue],
+      value: [hueDegrees],
       onValueChange: (value: number[]) => onHueChange(value[0]),
     }),
-    [hue, onHueChange]
+    [hueDegrees, onHueChange]
   );
 
   const trackStyle = useMemo(
     () => ({
       background: `linear-gradient(to right, 
-          hsl(0, ${saturation}%, ${lightness}%) 0%, 
-          hsl(36, ${saturation}%, ${lightness}%) 10%, 
-          hsl(72, ${saturation}%, ${lightness}%) 20%, 
-          hsl(108, ${saturation}%, ${lightness}%) 30%, 
-          hsl(144, ${saturation}%, ${lightness}%) 40%, 
-          hsl(180, ${saturation}%, ${lightness}%) 50%, 
-          hsl(216, ${saturation}%, ${lightness}%) 60%, 
-          hsl(252, ${saturation}%, ${lightness}%) 70%, 
-          hsl(288, ${saturation}%, ${lightness}%) 80%, 
-          hsl(324, ${saturation}%, ${lightness}%) 90%, 
-          hsl(360, ${saturation}%, ${lightness}%) 100%)`,
+          hsl(0, ${saturationPercent}%, ${lightnessPercent}%) 0%, 
+          hsl(36, ${saturationPercent}%, ${lightnessPercent}%) 10%, 
+          hsl(72, ${saturationPercent}%, ${lightnessPercent}%) 20%, 
+          hsl(108, ${saturationPercent}%, ${lightnessPercent}%) 30%, 
+          hsl(144, ${saturationPercent}%, ${lightnessPercent}%) 40%, 
+          hsl(180, ${saturationPercent}%, ${lightnessPercent}%) 50%, 
+          hsl(216, ${saturationPercent}%, ${lightnessPercent}%) 60%, 
+          hsl(252, ${saturationPercent}%, ${lightnessPercent}%) 70%, 
+          hsl(288, ${saturationPercent}%, ${lightnessPercent}%) 80%, 
+          hsl(324, ${saturationPercent}%, ${lightnessPercent}%) 90%, 
+          hsl(360, ${saturationPercent}%, ${lightnessPercent}%) 100%)`,
     }),
-    [saturation, lightness]
+    [saturationPercent, lightnessPercent]
   );
 
   const thumbStyle = useMemo(
     () => ({
-      backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
+      backgroundColor: `hsl(${hueDegrees}, ${saturationPercent}%, ${lightnessPercent}%)`,
     }),
-    [hue, saturation, lightness]
+    [hueDegrees, saturationPercent, lightnessPercent]
   );
 
   return (
