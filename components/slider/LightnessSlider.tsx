@@ -21,7 +21,7 @@ const LightnessSlider = (props: Props) => {
     lightnessPercent,
     onLightnessChange,
     min = 0,
-    max = 100,
+    max = 50,
     step = 1,
     ...sliderProps
   } = props;
@@ -38,8 +38,7 @@ const LightnessSlider = (props: Props) => {
     () => ({
       background: `linear-gradient(to right, 
           hsl(${hueDegrees}, ${saturationPercent}%, 0%) 0%, 
-          hsl(${hueDegrees}, ${saturationPercent}%, 50%) 50%, 
-          hsl(${hueDegrees}, ${saturationPercent}%, 100%) 100%)`,
+          hsl(${hueDegrees}, ${saturationPercent}%, 50%) 50%`,
     }),
     [hueDegrees, saturationPercent]
   );

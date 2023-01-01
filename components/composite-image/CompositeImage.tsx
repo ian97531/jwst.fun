@@ -68,14 +68,19 @@ const CompositeImage = (props: Props) => {
         observation.filters.map(({ name }) => filterConfigs[name])
       );
 
-      console.log(newColorUniforms);
       const currentUniforms = material.uniforms as ShaderUniforms;
-      currentUniforms.u_color_1.value = newColorUniforms.u_color_1.value;
-      currentUniforms.u_color_2.value = newColorUniforms.u_color_2.value;
-      currentUniforms.u_color_3.value = newColorUniforms.u_color_3.value;
-      currentUniforms.u_color_4.value = newColorUniforms.u_color_4.value;
-      currentUniforms.u_color_5.value = newColorUniforms.u_color_5.value;
-      currentUniforms.u_color_6.value = newColorUniforms.u_color_6.value;
+      currentUniforms.u_color_hsl_1.value =
+        newColorUniforms.u_color_hsl_1.value;
+      currentUniforms.u_color_hsl_2.value =
+        newColorUniforms.u_color_hsl_2.value;
+      currentUniforms.u_color_hsl_3.value =
+        newColorUniforms.u_color_hsl_3.value;
+      currentUniforms.u_color_hsl_4.value =
+        newColorUniforms.u_color_hsl_4.value;
+      currentUniforms.u_color_hsl_5.value =
+        newColorUniforms.u_color_hsl_5.value;
+      currentUniforms.u_color_hsl_6.value =
+        newColorUniforms.u_color_hsl_6.value;
     }
   });
 

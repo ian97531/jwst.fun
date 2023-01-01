@@ -7,15 +7,15 @@ export type ShaderTextureUniforms = {
   u_texture_6: { value: THREE.Texture };
 };
 
-export type ShaderColorUniformValue = [number, number, number, number];
+export type ShaderColorUniformValue = [number, number, number];
 
 export type ShaderColorUniforms = {
-  u_color_1: { value: ShaderColorUniformValue };
-  u_color_2: { value: ShaderColorUniformValue };
-  u_color_3: { value: ShaderColorUniformValue };
-  u_color_4: { value: ShaderColorUniformValue };
-  u_color_5: { value: ShaderColorUniformValue };
-  u_color_6: { value: ShaderColorUniformValue };
+  u_color_hsl_1: { value: ShaderColorUniformValue };
+  u_color_hsl_2: { value: ShaderColorUniformValue };
+  u_color_hsl_3: { value: ShaderColorUniformValue };
+  u_color_hsl_4: { value: ShaderColorUniformValue };
+  u_color_hsl_5: { value: ShaderColorUniformValue };
+  u_color_hsl_6: { value: ShaderColorUniformValue };
 };
 
 export type ShaderUniforms = ShaderTextureUniforms & ShaderColorUniforms;

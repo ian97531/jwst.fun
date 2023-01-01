@@ -15,7 +15,6 @@ export const OBSERVATIONS: Record<string, Observation> = {
           hueDegrees: 0,
           saturationPercent: 100,
           lightnessPercent: 50,
-          opacityPercent: 100,
         },
       },
       {
@@ -26,7 +25,6 @@ export const OBSERVATIONS: Record<string, Observation> = {
           hueDegrees: 0,
           saturationPercent: 100,
           lightnessPercent: 50,
-          opacityPercent: 100,
         },
       },
       {
@@ -37,7 +35,6 @@ export const OBSERVATIONS: Record<string, Observation> = {
           hueDegrees: 0,
           saturationPercent: 100,
           lightnessPercent: 50,
-          opacityPercent: 100,
         },
       },
       {
@@ -48,7 +45,6 @@ export const OBSERVATIONS: Record<string, Observation> = {
           hueDegrees: 0,
           saturationPercent: 100,
           lightnessPercent: 50,
-          opacityPercent: 100,
         },
       },
       {
@@ -59,7 +55,6 @@ export const OBSERVATIONS: Record<string, Observation> = {
           hueDegrees: 0,
           saturationPercent: 100,
           lightnessPercent: 50,
-          opacityPercent: 100,
         },
       },
       {
@@ -70,7 +65,6 @@ export const OBSERVATIONS: Record<string, Observation> = {
           hueDegrees: 0,
           saturationPercent: 100,
           lightnessPercent: 50,
-          opacityPercent: 100,
         },
       },
     ],

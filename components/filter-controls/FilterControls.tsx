@@ -66,7 +66,7 @@ const FilterControls = (props: Props) => {
         lightnessPercent={lightnessPercent}
         onSaturationChange={updateSaturation}
       />
-      <span>Lightness</span>
+      <span>Opacity</span>
       <LightnessSlider
         hueDegrees={hueDegrees}
         saturationPercent={saturationPercent}

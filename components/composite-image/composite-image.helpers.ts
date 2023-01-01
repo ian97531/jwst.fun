@@ -21,46 +21,40 @@ export const buildTextureUniforms = (
 const buildShaderColorUniformForFilterConfig = (
   filterConfig: FilterConfig
 ): ShaderColorUniformValue => {
-  const { hueDegrees, saturationPercent, lightnessPercent, opacityPercent } =
-    filterConfig;
-  const [red, green, blue] = hslToRgb(
-    hueDegrees,
-    saturationPercent,
-    lightnessPercent
-  );
-  return [red, green, blue, opacityPercent / 100];
+  const { hueDegrees, saturationPercent, lightnessPercent } = filterConfig;
+  return [hueDegrees / 360, saturationPercent / 100, lightnessPercent / 100];
 };
 
 export const buildColorUniforms = (
   filterConfigs: readonly FilterConfig[],
-  fallbackUniformValue: ShaderColorUniformValue = [0, 0, 0, 0]
+  fallbackUniformValue: ShaderColorUniformValue = [0, 0, 0]
 ): ShaderColorUniforms => ({
-  u_color_1: {
+  u_color_hsl_1: {
     value: filterConfigs[0]
       ? buildShaderColorUniformForFilterConfig(filterConfigs[0])
       : fallbackUniformValue,
   },
-  u_color_2: {
+  u_color_hsl_2: {
     value: filterConfigs[1]
       ? buildShaderColorUniformForFilterConfig(filterConfigs[1])
       : fallbackUniformValue,
   },
-  u_color_3: {
+  u_color_hsl_3: {
     value: filterConfigs[2]
       ? buildShaderColorUniformForFilterConfig(filterConfigs[2])
       : fallbackUniformValue,
   },
-  u_color_4: {
+  u_color_hsl_4: {
     value: filterConfigs[3]
       ? buildShaderColorUniformForFilterConfig(filterConfigs[3])
       : fallbackUniformValue,
   },
-  u_color_5: {
+  u_color_hsl_5: {
     value: filterConfigs[4]
       ? buildShaderColorUniformForFilterConfig(filterConfigs[4])
       : fallbackUniformValue,
   },
-  u_color_6: {
+  u_color_hsl_6: {
     value: filterConfigs[5]
       ? buildShaderColorUniformForFilterConfig(filterConfigs[5])
       : fallbackUniformValue,
