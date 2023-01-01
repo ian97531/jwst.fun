@@ -7,11 +7,20 @@
   --nav-border: 1px solid var(--whiteA10);
   --nav-padding: calc(var(--header-height) / 3);
   --nav-backdrop: blur(20px) contrast(50%) brightness(40%) grayscale(40%);
+
+  --scrollbar-foreground-color: rgb(133, 133, 133);
+  --scrollbar-hover-color: rgb(165, 165, 165);
+  --scrollbar-background-color: transparent;
+  --scrollbar-border: 2px solid rgb(34, 34, 34);
+  --scrollbar-size: 10px;
 }
 
-* {
+*,
+*::after,
+*::before {
   box-sizing: border-box;
   padding: 0;
+  position: relative;
   margin: 0;
   font-family: inherit;
 }

@@ -1,5 +1,7 @@
 .Header {
   backdrop-filter: var(--nav-backdrop);
+  border-bottom: var(--nav-border);
+  border-top: var(--nav-border);
   color: white;
   display: flex;
   align-items: center;
@@ -11,7 +13,6 @@
   height: var(--header-height);
   display: flex;
   align-items: center;
-  border-bottom: var(--nav-border);
   padding-left: var(--nav-padding);
   padding-right: var(--nav-padding);
 }

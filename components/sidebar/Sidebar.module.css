@@ -1,9 +1,32 @@
 .Sidebar {
-  backdrop-filter: var(--nav-backdrop);
-  display: flex;
-  flex-direction: column;
-  border-left: var(--nav-border);
-  flex-grow: 1;
-  width: fit-content;
   align-content: flex-end;
+  backdrop-filter: var(--nav-backdrop);
+  border-left: var(--nav-border);
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: fit-content;
+  overflow-y: auto;
+  overflow-y: overlay;
+  scrollbar-color: var(--scrollbar-foreground-color)
+    var(--scrollbar-background-color);
+  width: fit-content;
+}
+
+.Sidebar::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+.Sidebar::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-foreground-color);
+  border: var(--scrollbar-border);
+  border-radius: var(--scrollbar-size);
+}
+
+.Sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-hover-color);
+}
+
+.Sidebar::-webkit-scrollbar-track {
+  background: var(--scrollbar-background-color);
 }
