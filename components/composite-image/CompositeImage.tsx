@@ -1,6 +1,6 @@
 import { EMPTY_TEXTURE_URL } from 'components/composite-image/composite-image.constants';
 import {
-    buildColorUniforms, buildTextureUniforms
+    buildColorUniforms, buildLevelsUniforms, buildTextureUniforms
 } from 'components/composite-image/composite-image.helpers';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
@@ -52,23 +52,31 @@ const CompositeImage = (props: Props) => {
   );
 
   const shaderUniforms: ShaderUniforms = useMemo(
-    () => ({
-      ...buildTextureUniforms(filterTextures, emptyTexture),
-      ...buildColorUniforms(
-        observation.filters.map(({ name }) => filterConfigs[name])
-      ),
-    }),
+    () => {
+      const configs = observation.filters.map(
+        ({ name }) => filterConfigs[name]
+      );
+      return {
+        ...buildTextureUniforms(filterTextures, emptyTexture),
+        ...buildColorUniforms(configs),
+        ...buildLevelsUniforms(configs),
+      };
+    },
     [] // No dependencies. Updates to the color uniforms are performed in useFrame.
   );
 
   useFrame(() => {
     const material = materialRef.current;
     if (material) {
-      const newColorUniforms = buildColorUniforms(
-        observation.filters.map(({ name }) => filterConfigs[name])
+      const configs = observation.filters.map(
+        ({ name }) => filterConfigs[name]
       );
+      const newColorUniforms = buildColorUniforms(configs);
+      const newLevelsUniforms = buildLevelsUniforms(configs);
 
       const currentUniforms = material.uniforms as ShaderUniforms;
+
+      // Set the color uniforms
       currentUniforms.u_color_hsl_1.value =
         newColorUniforms.u_color_hsl_1.value;
       currentUniforms.u_color_hsl_2.value =
@@ -81,6 +89,14 @@ const CompositeImage = (props: Props) => {
         newColorUniforms.u_color_hsl_5.value;
       currentUniforms.u_color_hsl_6.value =
         newColorUniforms.u_color_hsl_6.value;
+
+      // Set the levels uniforms
+      currentUniforms.u_levels_1.value = newLevelsUniforms.u_levels_1.value;
+      currentUniforms.u_levels_2.value = newLevelsUniforms.u_levels_2.value;
+      currentUniforms.u_levels_3.value = newLevelsUniforms.u_levels_3.value;
+      currentUniforms.u_levels_4.value = newLevelsUniforms.u_levels_4.value;
+      currentUniforms.u_levels_5.value = newLevelsUniforms.u_levels_5.value;
+      currentUniforms.u_levels_6.value = newLevelsUniforms.u_levels_6.value;
     }
   });
 

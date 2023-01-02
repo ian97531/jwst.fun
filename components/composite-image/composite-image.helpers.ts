@@ -4,6 +4,8 @@ import { hslToRgb } from 'utils/color/color.helpers';
 import type {
   ShaderColorUniforms,
   ShaderColorUniformValue,
+  ShaderLevelsUniforms,
+  ShaderLevelsUniformValue,
   ShaderTextureUniforms,
 } from "components/composite-image/composite-image.types";
 export const buildTextureUniforms = (
@@ -57,6 +59,49 @@ export const buildColorUniforms = (
   u_color_hsl_6: {
     value: filterConfigs[5]
       ? buildShaderColorUniformForFilterConfig(filterConfigs[5])
+      : fallbackUniformValue,
+  },
+});
+
+const buildShaderLevelsUniformForFilterConfig = (
+  filterConfig: FilterConfig
+): ShaderLevelsUniformValue => {
+  const { blackValue, whiteValue } = filterConfig;
+  return [2.2, blackValue / 100, whiteValue / 100];
+};
+
+export const buildLevelsUniforms = (
+  filterConfigs: readonly FilterConfig[],
+  fallbackUniformValue: ShaderLevelsUniformValue = [2.2, 0, 1]
+): ShaderLevelsUniforms => ({
+  u_levels_1: {
+    value: filterConfigs[0]
+      ? buildShaderLevelsUniformForFilterConfig(filterConfigs[0])
+      : fallbackUniformValue,
+  },
+  u_levels_2: {
+    value: filterConfigs[1]
+      ? buildShaderLevelsUniformForFilterConfig(filterConfigs[1])
+      : fallbackUniformValue,
+  },
+  u_levels_3: {
+    value: filterConfigs[2]
+      ? buildShaderLevelsUniformForFilterConfig(filterConfigs[2])
+      : fallbackUniformValue,
+  },
+  u_levels_4: {
+    value: filterConfigs[3]
+      ? buildShaderLevelsUniformForFilterConfig(filterConfigs[3])
+      : fallbackUniformValue,
+  },
+  u_levels_5: {
+    value: filterConfigs[4]
+      ? buildShaderLevelsUniformForFilterConfig(filterConfigs[4])
+      : fallbackUniformValue,
+  },
+  u_levels_6: {
+    value: filterConfigs[5]
+      ? buildShaderLevelsUniformForFilterConfig(filterConfigs[5])
       : fallbackUniformValue,
   },
 });

@@ -2,6 +2,8 @@ export type FilterConfig = {
   hueDegrees: number;
   saturationPercent: number;
   lightnessPercent: number;
+  whiteValue: number;
+  blackValue: number;
 };
 
 export type Filter = {

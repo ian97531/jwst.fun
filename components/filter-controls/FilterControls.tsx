@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import HueSlider from 'components/slider/HueSlider';
+import LevelsSlider from 'components/slider/LevelsSlider';
 import LightnessSlider from 'components/slider/LightnessSlider';
 import SaturationSlider from 'components/slider/SaturationSlider';
 import React, { useCallback, useState } from 'react';
@@ -7,7 +8,6 @@ import React, { useCallback, useState } from 'react';
 import styles from './FilterControls.module.css';
 
 import type { FilterConfig } from "data/observations.types";
-
 export type Props = {
   className?: string;
   config: FilterConfig;
@@ -17,7 +17,13 @@ export type Props = {
 
 const FilterControls = (props: Props) => {
   const { className, config, name, onUpdateConfig } = props;
-  const { hueDegrees, saturationPercent, lightnessPercent } = config;
+  const {
+    hueDegrees,
+    saturationPercent,
+    lightnessPercent,
+    whiteValue,
+    blackValue,
+  } = config;
 
   const updateHue = useCallback(
     (updatedHue: number) => {
@@ -49,6 +55,26 @@ const FilterControls = (props: Props) => {
     [config, name]
   );
 
+  const updateBlackValue = useCallback(
+    (updatedBlackValue: number) => {
+      onUpdateConfig?.(name, {
+        ...config,
+        blackValue: updatedBlackValue,
+      });
+    },
+    [config, name]
+  );
+
+  const updateWhiteValue = useCallback(
+    (updatedWhiteValue: number) => {
+      onUpdateConfig?.(name, {
+        ...config,
+        whiteValue: updatedWhiteValue,
+      });
+    },
+    [config, name]
+  );
+
   return (
     <div className={clsx(styles.FilterControls, className)}>
       <h2 className={styles.title}>{name}</h2>
@@ -72,6 +98,13 @@ const FilterControls = (props: Props) => {
         saturationPercent={saturationPercent}
         lightnessPercent={lightnessPercent}
         onLightnessChange={updateLightness}
+      />
+      <span>Levels</span>
+      <LevelsSlider
+        blackValue={blackValue}
+        whiteValue={whiteValue}
+        onWhiteValueChange={updateWhiteValue}
+        onBlackValueChange={updateBlackValue}
       />
     </div>
   );
