@@ -1,0 +1,42 @@
+.ButtonSwitch {
+  border-radius: var(--border-radius);
+  background-color: var(--whiteA6);
+  border: 1px solid var(--whiteA11);
+  cursor: pointer;
+  color: var(--whiteA11);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+  white-space: nowrap;
+  will-change: background-color color border-color;
+}
+
+.ButtonSwitch:hover {
+  border-color: var(--whiteA12);
+  color: var(--whiteA12);
+}
+
+.ButtonSwitch.active {
+  background-color: var(--whiteA12);
+  color: black;
+}
+
+.ButtonSwitch.active:hover {
+  border-color: var(--whiteA12);
+  color: black;
+}
+
+.normal {
+  padding: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  font-size: 16px;
+}
+
+.small {
+  font-size: 13px;
+  padding: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}

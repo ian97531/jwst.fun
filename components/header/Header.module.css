@@ -1,12 +1,23 @@
 .Header {
   backdrop-filter: var(--nav-backdrop);
+  border-left: var(--nav-border);
+  border-right: var(--nav-border);
   border-bottom: var(--nav-border);
   border-top: var(--nav-border);
   color: white;
-  display: flex;
+  display: grid;
+  grid-template-columns:
+    var(--header-height) minmax(min-content, calc(var(--header-height) * 3))
+    minmax(250px, auto) minmax(min-content, calc(var(--header-height) * 4));
   align-items: center;
   font-size: 20px;
   width: 100vw;
+}
+
+@media (max-width: 700px) {
+  .Header {
+    grid-template-columns: var(--header-height) minmax(0px, auto) min-content;
+  }
 }
 
 .Header > * {
@@ -25,4 +36,33 @@
 
 .title {
   flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 700px) {
+  .title {
+    display: none;
+  }
+}
+
+.observation {
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.observation > * {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
 }

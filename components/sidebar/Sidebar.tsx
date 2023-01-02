@@ -10,13 +10,21 @@ const inconsolata = Inconsolata({ subsets: ["latin"] });
 export type Props = {
   className?: string;
   children: React.ReactNode;
+  hidden?: boolean;
 };
 
 const Sidebar = (props: Props) => {
-  const { children, className } = props;
+  const { children, className, hidden = false } = props;
 
   return (
-    <aside className={clsx(styles.Sidebar, inconsolata.className, className)}>
+    <aside
+      className={clsx(
+        styles.Sidebar,
+        hidden && styles.hidden,
+        inconsolata.className,
+        className
+      )}
+    >
       {children}
     </aside>
   );

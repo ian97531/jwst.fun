@@ -9,6 +9,16 @@
   padding: var(--nav-padding);
 }
 
-.title {
-  grid-column: 1 / -1;
+.mayDisable {
+  transition: filter 0.2s ease-in-out;
+  will-change: filter;
+}
+
+.disable {
+  filter: grayscale(100%) brightness(0.55);
+}
+
+.isolateButton {
+  align-self: center;
+  justify-self: end;
 }

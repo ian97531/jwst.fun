@@ -1,6 +1,12 @@
 :root {
-  --max-width: 1100px;
-  --border-radius: 12px;
+  --border-radius: 7px;
+
+  --font-size-small: 13px;
+  --font-size-normal: 16px;
+  --font-size-large: 24px;
+
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
 
   --header-height: 70px;
 

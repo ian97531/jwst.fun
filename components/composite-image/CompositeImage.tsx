@@ -12,8 +12,10 @@ import vertexShader from './vertex-shader.glsl';
 
 import type { FilterConfig, Observation } from "data/observations.types";
 import type { ShaderUniforms } from "components/composite-image/composite-image.types";
+
 export type Props = {
   filterConfigs: Record<string, FilterConfig>;
+  isolateFilter?: string | null;
   observation: Observation;
   onDragStart: () => void;
   onDragEnd: () => void;
@@ -26,6 +28,7 @@ const INITIAL_SCALE = 0.001;
 const CompositeImage = (props: Props) => {
   const {
     filterConfigs,
+    isolateFilter = null,
     observation,
     onDragStart,
     onDragEnd,
@@ -51,6 +54,15 @@ const CompositeImage = (props: Props) => {
     }
   );
 
+  const isolateFilterIndex = useMemo(() => {
+    console.log("invalidate");
+    return isolateFilter !== null
+      ? observation.filters.findIndex(({ name }) => name === isolateFilter) + 1
+      : null;
+  }, [isolateFilter]);
+
+  console.log(isolateFilterIndex);
+
   const shaderUniforms: ShaderUniforms = useMemo(
     () => {
       const configs = observation.filters.map(
@@ -58,7 +70,7 @@ const CompositeImage = (props: Props) => {
       );
       return {
         ...buildTextureUniforms(filterTextures, emptyTexture),
-        ...buildColorUniforms(configs),
+        ...buildColorUniforms(configs, isolateFilterIndex),
         ...buildLevelsUniforms(configs),
       };
     },
@@ -71,7 +83,7 @@ const CompositeImage = (props: Props) => {
       const configs = observation.filters.map(
         ({ name }) => filterConfigs[name]
       );
-      const newColorUniforms = buildColorUniforms(configs);
+      const newColorUniforms = buildColorUniforms(configs, isolateFilterIndex);
       const newLevelsUniforms = buildLevelsUniforms(configs);
 
       const currentUniforms = material.uniforms as ShaderUniforms;

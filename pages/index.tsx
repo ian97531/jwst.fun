@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import FilterControls from 'components/filter-controls/FilterControls';
 import Header from 'components/header/Header';
 import Sidebar from 'components/sidebar/Sidebar';
@@ -11,6 +12,10 @@ import styles from 'styles/index.module.css';
 const INITIAL_SELECTED_OBSERVATION_ID: ObservationId = "jw02731";
 
 export default function Home() {
+  const [filterAdjustmentsOpen, setIsFilterAdjustmentsOpen] = useState(true);
+  const [isolatedFilterName, setIsolatedFilterName] = useState<string | null>(
+    null
+  );
   const [selectedObservationName, setSelectedObservationName] =
     useState<ObservationId>(INITIAL_SELECTED_OBSERVATION_ID);
 
@@ -56,6 +61,17 @@ export default function Home() {
     [OBSERVATIONS]
   );
 
+  const isolateFilter = useCallback(
+    (filterName: string, newValue: boolean) => {
+      if (newValue === false && isolatedFilterName === filterName) {
+        setIsolatedFilterName(null);
+      } else {
+        setIsolatedFilterName(filterName);
+      }
+    },
+    [isolatedFilterName]
+  );
+
   return (
     <>
       <Head>
@@ -72,16 +88,23 @@ export default function Home() {
         <nav className={styles.nav}>
           <Header
             selectedObservation={selectedObservationName}
+            filterAdjustmentOpen={filterAdjustmentsOpen}
             observations={OBSERVATIONS}
             onSelectObservation={updateSelectedObservation}
+            onToggleFilterAdjustments={setIsFilterAdjustmentsOpen}
           />
 
-          <Sidebar>
+          <Sidebar hidden={!filterAdjustmentsOpen}>
             {Object.entries(filterConfigs).map(([name, settings]) => (
               <FilterControls
+                config={settings}
+                disable={
+                  isolatedFilterName !== null && isolatedFilterName !== name
+                }
                 key={name}
                 name={name}
-                config={settings}
+                isolateFilter={isolatedFilterName === name}
+                onToggleIsolateFilter={isolateFilter}
                 onUpdateConfig={updateConfigForFilter}
               />
             ))}
@@ -90,6 +113,7 @@ export default function Home() {
 
         <Viewport
           className={styles.viewport}
+          isolateFilter={isolatedFilterName}
           filterConfigs={filterConfigs}
           observation={selectedObservation}
         />

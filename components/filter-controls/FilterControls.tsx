@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import ButtonSwitch from 'components/button-switch/ButtonSwitch';
 import HueSlider from 'components/slider/HueSlider';
 import LevelsSlider from 'components/slider/LevelsSlider';
 import LightnessSlider from 'components/slider/LightnessSlider';
@@ -11,12 +12,23 @@ import type { FilterConfig } from "data/observations.types";
 export type Props = {
   className?: string;
   config: FilterConfig;
+  disable?: boolean;
+  isolateFilter?: boolean;
   name: string;
+  onToggleIsolateFilter?: (name: string, newValue: boolean) => void;
   onUpdateConfig?: (name: string, updatedConfig: FilterConfig) => void;
 };
 
 const FilterControls = (props: Props) => {
-  const { className, config, name, onUpdateConfig } = props;
+  const {
+    className,
+    config,
+    disable,
+    isolateFilter,
+    name,
+    onToggleIsolateFilter,
+    onUpdateConfig,
+  } = props;
   const {
     hueDegrees,
     saturationPercent,
@@ -75,32 +87,65 @@ const FilterControls = (props: Props) => {
     [config, name]
   );
 
+  const toggleIsolateFilter = useCallback(
+    (newValue: boolean) => {
+      onToggleIsolateFilter?.(name, newValue);
+    },
+    [name, onToggleIsolateFilter]
+  );
+
   return (
     <div className={clsx(styles.FilterControls, className)}>
-      <h2 className={styles.title}>{name}</h2>
-      <span>Hue</span>
+      <h2 className={clsx(styles.mayDisable, disable && styles.disable)}>
+        {name}
+      </h2>
+      <ButtonSwitch
+        className={styles.isolateButton}
+        on={isolateFilter}
+        onToggle={toggleIsolateFilter}
+        variant="small"
+      >
+        Isolate
+      </ButtonSwitch>
+      <span className={clsx(styles.mayDisable, disable && styles.disable)}>
+        Hue
+      </span>
       <HueSlider
+        className={clsx(styles.mayDisable, disable && styles.disable)}
+        disabled={disable}
         hueDegrees={hueDegrees}
         saturationPercent={saturationPercent}
         lightnessPercent={lightnessPercent}
         onHueChange={updateHue}
       />
-      <span>Saturation</span>
+      <span className={clsx(styles.mayDisable, disable && styles.disable)}>
+        Saturation
+      </span>
       <SaturationSlider
+        className={clsx(styles.mayDisable, disable && styles.disable)}
+        disabled={disable}
         hueDegrees={hueDegrees}
         saturationPercent={saturationPercent}
         lightnessPercent={lightnessPercent}
         onSaturationChange={updateSaturation}
       />
-      <span>Opacity</span>
+      <span className={clsx(styles.mayDisable, disable && styles.disable)}>
+        Opacity
+      </span>
       <LightnessSlider
+        className={clsx(styles.mayDisable, disable && styles.disable)}
+        disabled={disable}
         hueDegrees={hueDegrees}
         saturationPercent={saturationPercent}
         lightnessPercent={lightnessPercent}
         onLightnessChange={updateLightness}
       />
-      <span>Levels</span>
+      <span className={clsx(styles.mayDisable, disable && styles.disable)}>
+        Levels
+      </span>
       <LevelsSlider
+        className={clsx(styles.mayDisable, disable && styles.disable)}
+        disabled={disable}
         blackValue={blackValue}
         whiteValue={whiteValue}
         onWhiteValueChange={updateWhiteValue}

@@ -9,8 +9,7 @@
     ".gitignore": true,
     "next-env.d.ts": true,
     ".next": true,
-    ".prettierrc.json": true,
-    "rome.json": true
+    ".prettierrc.json": true
   },
   "search.exclude": {
     "**/node_modules/": true,

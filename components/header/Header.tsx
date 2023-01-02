@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import ButtonSwitch from 'components/button-switch/ButtonSwitch';
 import { Observation } from 'data/observations.types';
 import React, { useCallback } from 'react';
 
@@ -11,13 +12,21 @@ const inconsolata = Inconsolata({ subsets: ["latin"] });
 
 export type Props = {
   className?: string;
+  filterAdjustmentOpen: boolean;
   observations: Record<string, Observation>;
   onSelectObservation: (name: string) => void;
+  onToggleFilterAdjustments?: (newValue: boolean) => void;
   selectedObservation: string;
 };
 
 const Header = (props: Props) => {
-  const { className, observations, selectedObservation } = props;
+  const {
+    className,
+    filterAdjustmentOpen,
+    observations,
+    onToggleFilterAdjustments,
+    selectedObservation,
+  } = props;
 
   const [{ angle }, angleApi] = useSpring(() => ({
     angle: 0,
@@ -43,8 +52,17 @@ const Header = (props: Props) => {
           }}
         />
       </div>
-      <div className={styles.title}>
-        JWST.fun 🔭 {observations[selectedObservation].name}
+      <div className={styles.title}>JWST.fun 🔭</div>
+      <div className={styles.observation}>
+        <span>{observations[selectedObservation].name}</span>
+      </div>
+      <div className={styles.controls}>
+        <ButtonSwitch
+          on={filterAdjustmentOpen}
+          onToggle={onToggleFilterAdjustments}
+        >
+          Filter Adjustments
+        </ButtonSwitch>
       </div>
     </header>
   );

@@ -32,7 +32,6 @@ const LevelsSlider = (props: Props) => {
     () => ({
       value: [blackValue, whiteValue],
       onValueChange: ([newBlackValue, newWhiteValue]: number[]) => {
-        console.log("newValue", [newBlackValue, newWhiteValue]);
         if (newBlackValue !== blackValue) {
           onBlackValueChange?.(newBlackValue);
         }
@@ -45,7 +44,6 @@ const LevelsSlider = (props: Props) => {
     [blackValue, onBlackValueChange, whiteValue]
   );
 
-  console.log("value", valueProps.value);
   return (
     <RadixSlider.Root
       className={clsx(sliderStyles.SliderRoot, className)}
