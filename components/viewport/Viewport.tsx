@@ -7,12 +7,21 @@ import { Canvas } from '@react-three/fiber';
 export type Props = {
   className?: string;
   filterConfigs: Record<string, FilterConfig>;
+  initialScale: number;
   isolateFilter?: string | null;
   observation: Observation;
+  onChangeScale: (scale: number) => void;
 };
 
 const Viewport = (props: Props) => {
-  const { className, filterConfigs, isolateFilter, observation } = props;
+  const {
+    className,
+    filterConfigs,
+    initialScale,
+    isolateFilter,
+    observation,
+    onChangeScale,
+  } = props;
 
   const [isDragging, setIsDragging] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
@@ -21,14 +30,17 @@ const Viewport = (props: Props) => {
     <section className={className}>
       <Canvas
         frameloop="demand"
+        orthographic
         style={{
           cursor: isDragging ? "grabbing" : isMouseOver ? "grab" : "default",
         }}
       >
         <CompositeImage
           filterConfigs={filterConfigs}
+          initialScale={initialScale}
           isolateFilter={isolateFilter}
           observation={observation}
+          onChangeScale={onChangeScale}
           onDragStart={() => setIsDragging(true)}
           onDragEnd={() => setIsDragging(false)}
           onPointerEnter={() => setIsMouseOver(true)}

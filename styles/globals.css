@@ -3,12 +3,13 @@
 
   --font-size-small: 13px;
   --font-size-normal: 16px;
-  --font-size-large: 24px;
+  --font-size-large: 20px;
 
   --font-weight-normal: 400;
   --font-weight-bold: 700;
 
   --header-height: 70px;
+  --footer-height: 24px;
 
   --nav-border: 1px solid var(--whiteA10);
   --nav-padding: calc(var(--header-height) / 3);
@@ -49,5 +50,4 @@ body {
 
 a {
   color: inherit;
-  text-decoration: none;
 }

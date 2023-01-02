@@ -1,9 +1,6 @@
 .Header {
   backdrop-filter: var(--nav-backdrop);
-  border-left: var(--nav-border);
-  border-right: var(--nav-border);
-  border-bottom: var(--nav-border);
-  border-top: var(--nav-border);
+  border: var(--nav-border);
   color: white;
   display: grid;
   grid-template-columns:

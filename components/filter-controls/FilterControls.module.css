@@ -9,6 +9,10 @@
   padding: var(--nav-padding);
 }
 
+.name {
+  font-size: var(--font-size-large);
+}
+
 .mayDisable {
   transition: filter 0.2s ease-in-out;
   will-change: filter;

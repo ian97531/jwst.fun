@@ -96,7 +96,13 @@ const FilterControls = (props: Props) => {
 
   return (
     <div className={clsx(styles.FilterControls, className)}>
-      <h2 className={clsx(styles.mayDisable, disable && styles.disable)}>
+      <h2
+        className={clsx(
+          styles.name,
+          styles.mayDisable,
+          disable && styles.disable
+        )}
+      >
         {name}
       </h2>
       <ButtonSwitch
@@ -107,6 +113,17 @@ const FilterControls = (props: Props) => {
       >
         Isolate
       </ButtonSwitch>
+      <span className={clsx(styles.mayDisable, disable && styles.disable)}>
+        Levels
+      </span>
+      <LevelsSlider
+        className={clsx(styles.mayDisable, disable && styles.disable)}
+        disabled={disable}
+        blackValue={blackValue}
+        whiteValue={whiteValue}
+        onWhiteValueChange={updateWhiteValue}
+        onBlackValueChange={updateBlackValue}
+      />
       <span className={clsx(styles.mayDisable, disable && styles.disable)}>
         Hue
       </span>
@@ -139,17 +156,6 @@ const FilterControls = (props: Props) => {
         saturationPercent={saturationPercent}
         lightnessPercent={lightnessPercent}
         onLightnessChange={updateLightness}
-      />
-      <span className={clsx(styles.mayDisable, disable && styles.disable)}>
-        Levels
-      </span>
-      <LevelsSlider
-        className={clsx(styles.mayDisable, disable && styles.disable)}
-        disabled={disable}
-        blackValue={blackValue}
-        whiteValue={whiteValue}
-        onWhiteValueChange={updateWhiteValue}
-        onBlackValueChange={updateBlackValue}
       />
     </div>
   );

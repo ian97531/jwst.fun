@@ -1,0 +1,23 @@
+.Footer {
+  align-items: center;
+  backdrop-filter: var(--nav-backdrop);
+  border: var(--nav-border);
+  color: white;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  height: var(--footer-height);
+  justify-content: space-between;
+  padding-left: var(--nav-padding);
+  padding-right: var(--nav-padding);
+  width: 100vw;
+}
+
+.Footer {
+  white-space: nowrap;
+}
+
+.credits {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

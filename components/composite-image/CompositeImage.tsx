@@ -15,32 +15,35 @@ import type { ShaderUniforms } from "components/composite-image/composite-image.
 
 export type Props = {
   filterConfigs: Record<string, FilterConfig>;
+  initialScale: number;
   isolateFilter?: string | null;
   observation: Observation;
+  onChangeScale: (scale: number) => void;
   onDragStart: () => void;
   onDragEnd: () => void;
   onPointerEnter: (evt: ThreeEvent<PointerEvent>) => void;
   onPointerLeave: (evt: ThreeEvent<PointerEvent>) => void;
 };
 
-const INITIAL_SCALE = 0.001;
-
 const CompositeImage = (props: Props) => {
   const {
     filterConfigs,
+    initialScale,
     isolateFilter = null,
     observation,
+    onChangeScale,
     onDragStart,
     onDragEnd,
     onPointerEnter,
     onPointerLeave,
   } = props;
 
-  const scaleRef = useRef(INITIAL_SCALE);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const meshRef = useRef<THREE.Mesh>(null);
 
   const { invalidate, gl } = useThree();
+  const three = useThree();
+  console.log(three);
 
   const [emptyTexture, ...filterTextures] = useLoader(
     THREE.TextureLoader,
@@ -55,13 +58,10 @@ const CompositeImage = (props: Props) => {
   );
 
   const isolateFilterIndex = useMemo(() => {
-    console.log("invalidate");
     return isolateFilter !== null
       ? observation.filters.findIndex(({ name }) => name === isolateFilter) + 1
       : null;
   }, [isolateFilter]);
-
-  console.log(isolateFilterIndex);
 
   const shaderUniforms: ShaderUniforms = useMemo(
     () => {
@@ -115,8 +115,8 @@ const CompositeImage = (props: Props) => {
   const handleDrag = useCallback(
     (evt: PointerEvent) => {
       if (meshRef.current) {
-        meshRef.current.translateX(evt.movementX / 160);
-        meshRef.current.translateY(evt.movementY / -160);
+        meshRef.current.translateX(evt.movementX);
+        meshRef.current.translateY(-evt.movementY);
         invalidate();
         evt.preventDefault();
       }
@@ -144,13 +144,14 @@ const CompositeImage = (props: Props) => {
     const handleWheel = (evt: WheelEvent) => {
       if (meshRef.current) {
         meshRef.current.scale.multiplyScalar(1 + evt.deltaY / 5000);
+        onChangeScale?.(meshRef.current.scale.getComponent(0));
         invalidate();
       }
     };
 
     gl.domElement.addEventListener("wheel", handleWheel, { passive: true });
     return () => gl.domElement.removeEventListener("wheel", handleWheel);
-  }, [invalidate, gl.domElement]);
+  }, [invalidate, gl.domElement, onchange]);
 
   return (
     <mesh
@@ -158,7 +159,7 @@ const CompositeImage = (props: Props) => {
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
       ref={meshRef}
-      scale={scaleRef.current}
+      scale={initialScale}
     >
       <planeGeometry args={observation.imageSizePixels} />
       <shaderMaterial

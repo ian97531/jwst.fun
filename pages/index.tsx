@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import FilterControls from 'components/filter-controls/FilterControls';
+import Footer from 'components/footer/Footer';
 import Header from 'components/header/Header';
 import Sidebar from 'components/sidebar/Sidebar';
 import Viewport from 'components/viewport/Viewport';
@@ -10,8 +11,10 @@ import { useCallback, useMemo, useState } from 'react';
 import styles from 'styles/index.module.css';
 
 const INITIAL_SELECTED_OBSERVATION_ID: ObservationId = "jw02731";
+const INITIAL_SCALE = 0.2;
 
 export default function Home() {
+  const [scale, setScale] = useState(INITIAL_SCALE);
   const [filterAdjustmentsOpen, setIsFilterAdjustmentsOpen] = useState(true);
   const [isolatedFilterName, setIsolatedFilterName] = useState<string | null>(
     null
@@ -109,13 +112,16 @@ export default function Home() {
               />
             ))}
           </Sidebar>
+          <Footer scale={scale} />
         </nav>
 
         <Viewport
           className={styles.viewport}
+          initialScale={INITIAL_SCALE}
           isolateFilter={isolatedFilterName}
           filterConfigs={filterConfigs}
           observation={selectedObservation}
+          onChangeScale={setScale}
         />
       </main>
     </>
