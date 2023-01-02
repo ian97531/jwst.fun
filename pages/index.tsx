@@ -7,14 +7,13 @@ import Viewport from 'components/viewport/Viewport';
 import { ObservationId, OBSERVATIONS } from 'data/observations.constants';
 import { FilterConfig } from 'data/observations.types';
 import Head from 'next/head';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from 'styles/index.module.css';
+import { isDomRuntime } from 'utils/runtime/runtime.helpers';
 
 const INITIAL_SELECTED_OBSERVATION_ID: ObservationId = "jw02731";
-const INITIAL_SCALE = 0.2;
 
 export default function Home() {
-  const [scale, setScale] = useState(INITIAL_SCALE);
   const [filterAdjustmentsOpen, setIsFilterAdjustmentsOpen] = useState(true);
   const [isolatedFilterName, setIsolatedFilterName] = useState<string | null>(
     null
@@ -32,6 +31,45 @@ export default function Home() {
       ])
     )
   );
+
+  const initialScale = useMemo(() => {
+    if (isDomRuntime()) {
+      const browserViewportHeight =
+        window.visualViewport?.height ?? document.body.clientHeight;
+      const browserViewportWidth =
+        window.visualViewport?.width ?? document.body.clientWidth;
+
+      const computedStyle = window.getComputedStyle(document.documentElement);
+      const headerHeight = Number.parseInt(
+        computedStyle.getPropertyValue("--header-height"),
+        10
+      );
+      const footerHeight = Number.parseInt(
+        computedStyle.getPropertyValue("--footer-height"),
+        10
+      );
+
+      const sidebarWidth = Number.parseInt(
+        computedStyle.getPropertyValue("--sidebar-width"),
+        10
+      );
+      const canvasViewportHeight =
+        browserViewportHeight - footerHeight - headerHeight - 30;
+      const canvasViewportWidth = browserViewportWidth - sidebarWidth - 30;
+
+      const heightRatio =
+        canvasViewportHeight / selectedObservation.imageSizePixels[1];
+      const widthRatio =
+        canvasViewportWidth / selectedObservation.imageSizePixels[0];
+
+      const scale = Math.min(heightRatio, widthRatio, 1);
+      return scale;
+    } else {
+      return 0;
+    }
+  }, []);
+
+  const [scale, setScale] = useState(0);
 
   const updateConfigForFilter = useCallback(
     (name: string, updatedFilterConfig: FilterConfig) => {
@@ -75,6 +113,10 @@ export default function Home() {
     [isolatedFilterName]
   );
 
+  useEffect(() => {
+    setScale(initialScale);
+  }, [initialScale]);
+
   return (
     <>
       <Head>
@@ -117,7 +159,7 @@ export default function Home() {
 
         <Viewport
           className={styles.viewport}
-          initialScale={INITIAL_SCALE}
+          initialScale={initialScale}
           isolateFilter={isolatedFilterName}
           filterConfigs={filterConfigs}
           observation={selectedObservation}

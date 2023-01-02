@@ -4,6 +4,7 @@ import {
 } from 'components/composite-image/composite-image.helpers';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { isDomRuntime } from 'utils/runtime/runtime.helpers';
 
 import { ThreeEvent, useFrame, useLoader, useThree } from '@react-three/fiber';
 
@@ -12,7 +13,6 @@ import vertexShader from './vertex-shader.glsl';
 
 import type { FilterConfig, Observation } from "data/observations.types";
 import type { ShaderUniforms } from "components/composite-image/composite-image.types";
-
 export type Props = {
   filterConfigs: Record<string, FilterConfig>;
   initialScale: number;
@@ -56,6 +56,40 @@ const CompositeImage = (props: Props) => {
         console.log(url, loaded, total);
     }
   );
+
+  const initialPosition = useMemo(() => {
+    if (isDomRuntime()) {
+      const browserViewportHeight =
+        window.visualViewport?.height ?? document.body.clientHeight;
+      const browserViewportWidth =
+        window.visualViewport?.width ?? document.body.clientWidth;
+
+      const computedStyle = window.getComputedStyle(document.documentElement);
+      const headerHeight = Number.parseInt(
+        computedStyle.getPropertyValue("--header-height"),
+        10
+      );
+      const footerHeight = Number.parseInt(
+        computedStyle.getPropertyValue("--footer-height"),
+        10
+      );
+
+      const sidebarWidth = Number.parseInt(
+        computedStyle.getPropertyValue("--sidebar-width"),
+        10
+      );
+      const canvasViewportHeight =
+        browserViewportHeight - footerHeight - headerHeight;
+      const canvasViewportCenterY = headerHeight + canvasViewportHeight / 2;
+      const canvasViewportCenterX = (browserViewportWidth - sidebarWidth) / 2;
+
+      const offsetX = browserViewportWidth / 2 - canvasViewportCenterX;
+      const offsetY = browserViewportHeight / 2 - canvasViewportCenterY;
+      return new THREE.Vector3(-offsetX, offsetY, 0);
+    } else {
+      return new THREE.Vector3(0, 0, 0);
+    }
+  }, []);
 
   const isolateFilterIndex = useMemo(() => {
     return isolateFilter !== null
@@ -153,12 +187,14 @@ const CompositeImage = (props: Props) => {
     return () => gl.domElement.removeEventListener("wheel", handleWheel);
   }, [invalidate, gl.domElement, onchange]);
 
+  console.log(initialPosition);
   return (
     <mesh
       onPointerDown={startDrag}
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
       ref={meshRef}
+      position={initialPosition}
       scale={initialScale}
     >
       <planeGeometry args={observation.imageSizePixels} />

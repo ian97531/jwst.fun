@@ -10,6 +10,7 @@
 
   --header-height: 70px;
   --footer-height: 24px;
+  --sidebar-width: 350px;
 
   --nav-border: 1px solid var(--whiteA10);
   --nav-padding: calc(var(--header-height) / 3);

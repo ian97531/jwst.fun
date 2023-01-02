@@ -23,12 +23,13 @@ const FilterControls = (props: Props) => {
   const {
     className,
     config,
-    disable,
-    isolateFilter,
+    disable = false,
+    isolateFilter = false,
     name,
     onToggleIsolateFilter,
     onUpdateConfig,
   } = props;
+
   const {
     hueDegrees,
     saturationPercent,
