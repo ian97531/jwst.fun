@@ -14,6 +14,7 @@ import { isDomRuntime } from 'utils/runtime/runtime.helpers';
 const INITIAL_SELECTED_OBSERVATION_ID: ObservationId = "jw02731";
 
 export default function Home() {
+  const [scale, setScale] = useState(0);
   const [filterAdjustmentsOpen, setIsFilterAdjustmentsOpen] = useState(true);
   const [isolatedFilterName, setIsolatedFilterName] = useState<string | null>(
     null
@@ -68,8 +69,6 @@ export default function Home() {
       return 0;
     }
   }, []);
-
-  const [scale, setScale] = useState(0);
 
   const updateConfigForFilter = useCallback(
     (name: string, updatedFilterConfig: FilterConfig) => {

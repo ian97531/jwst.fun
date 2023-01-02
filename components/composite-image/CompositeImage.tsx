@@ -43,7 +43,6 @@ const CompositeImage = (props: Props) => {
 
   const { invalidate, gl } = useThree();
   const three = useThree();
-  console.log(three);
 
   const [emptyTexture, ...filterTextures] = useLoader(
     THREE.TextureLoader,
@@ -187,7 +186,6 @@ const CompositeImage = (props: Props) => {
     return () => gl.domElement.removeEventListener("wheel", handleWheel);
   }, [invalidate, gl.domElement, onchange]);
 
-  console.log(initialPosition);
   return (
     <mesh
       onPointerDown={startDrag}
