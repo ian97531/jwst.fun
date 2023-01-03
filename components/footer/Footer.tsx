@@ -9,15 +9,20 @@ const inconsolata = Inconsolata({ subsets: ["latin"] });
 
 export type Props = {
   className?: string;
+  imageWidth: number;
+  imageHeight: number;
   scale: number;
 };
 
 const Footer = (props: Props) => {
-  const { className, scale } = props;
+  const { className, imageWidth, imageHeight, scale } = props;
 
   const zoom = scale * 100;
   return (
     <footer className={clsx(styles.Footer, inconsolata.className, className)}>
+      <span>
+        {imageWidth}px &#215; {imageHeight}px
+      </span>
       <span>Zoom: {zoom.toFixed(1)}%</span>
       <span className={styles.credits}>
         Images from the{" "}

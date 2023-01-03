@@ -1,0 +1,29 @@
+.SelectTrigger {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: var(--font-size-large);
+  justify-content: center;
+  line-height: 1;
+  gap: 8px;
+}
+
+.SelectContent {
+  backdrop-filter: var(--nav-backdrop);
+  border: var(--nav-border);
+  border-radius: calc(var(--border-radius) * 2);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.SelectViewport {
+  padding: 8px;
+}
+
+.SelectScrollButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  cursor: default;
+}

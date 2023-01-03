@@ -1,5 +1,7 @@
 import clsx from 'clsx';
-import ButtonSwitch from 'components/button-switch/ButtonSwitch';
+import ButtonSwitch from 'components/library/button-switch/ButtonSwitch';
+import Select from 'components/library/select/Select';
+import SelectItem from 'components/library/select/SelectItem';
 import { Observation } from 'data/observations.types';
 import React, { useCallback } from 'react';
 
@@ -13,7 +15,7 @@ const inconsolata = Inconsolata({ subsets: ["latin"] });
 export type Props = {
   className?: string;
   filterAdjustmentOpen: boolean;
-  observations: Record<string, Observation>;
+  observationOptions: Record<string, string>;
   onSelectObservation: (name: string) => void;
   onToggleFilterAdjustments?: (newValue: boolean) => void;
   selectedObservation: string;
@@ -23,7 +25,8 @@ const Header = (props: Props) => {
   const {
     className,
     filterAdjustmentOpen,
-    observations,
+    observationOptions,
+    onSelectObservation,
     onToggleFilterAdjustments,
     selectedObservation,
   } = props;
@@ -54,7 +57,17 @@ const Header = (props: Props) => {
       </div>
       <div className={styles.title}>JWST.fun 🔭</div>
       <div className={styles.observation}>
-        <span>{observations[selectedObservation].name}</span>
+        <Select
+          menuClassName={styles.menu}
+          defaultValue={selectedObservation}
+          onValueChange={onSelectObservation}
+        >
+          {Object.entries(observationOptions).map(([id, name]) => (
+            <SelectItem key={id} id={id}>
+              {name}
+            </SelectItem>
+          ))}
+        </Select>
       </div>
       <div className={styles.controls}>
         <ButtonSwitch

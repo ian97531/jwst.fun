@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import FilterControls from 'components/filter-controls/FilterControls';
 import Footer from 'components/footer/Footer';
 import Header from 'components/header/Header';
+import FilterControls from 'components/sidebar/filter-controls/FilterControls';
 import Sidebar from 'components/sidebar/Sidebar';
-import Viewport from 'components/viewport/Viewport';
+import Viewport from 'components/viewer/viewport/Viewport';
 import { ObservationId, OBSERVATIONS } from 'data/observations.constants';
 import { FilterConfig } from 'data/observations.types';
 import Head from 'next/head';
@@ -68,7 +68,7 @@ export default function Home() {
     } else {
       return 0;
     }
-  }, []);
+  }, [selectedObservationName]);
 
   const updateConfigForFilter = useCallback(
     (name: string, updatedFilterConfig: FilterConfig) => {
@@ -94,9 +94,8 @@ export default function Home() {
 
   const observationOptions = useMemo(
     () =>
-      Object.values(OBSERVATIONS).map(
-        ({ name, imageSizePixels }) =>
-          `${name} - ${imageSizePixels[0]}px × ${imageSizePixels[1]}px`
+      Object.fromEntries(
+        Object.entries(OBSERVATIONS).map(([id, { name }]) => [id, name])
       ),
     [OBSERVATIONS]
   );
@@ -116,6 +115,10 @@ export default function Home() {
     setScale(initialScale);
   }, [initialScale]);
 
+  useEffect(() => {
+    setIsolatedFilterName(null);
+  }, [selectedObservationName]);
+
   return (
     <>
       <Head>
@@ -133,7 +136,7 @@ export default function Home() {
           <Header
             selectedObservation={selectedObservationName}
             filterAdjustmentOpen={filterAdjustmentsOpen}
-            observations={OBSERVATIONS}
+            observationOptions={observationOptions}
             onSelectObservation={updateSelectedObservation}
             onToggleFilterAdjustments={setIsFilterAdjustmentsOpen}
           />
@@ -153,14 +156,19 @@ export default function Home() {
               />
             ))}
           </Sidebar>
-          <Footer scale={scale} />
+          <Footer
+            imageHeight={selectedObservation.imageSizePixels[1]}
+            imageWidth={selectedObservation.imageSizePixels[0]}
+            scale={scale}
+          />
         </nav>
 
         <Viewport
           className={styles.viewport}
+          filterConfigs={filterConfigs}
           initialScale={initialScale}
           isolateFilter={isolatedFilterName}
-          filterConfigs={filterConfigs}
+          key={selectedObservationName}
           observation={selectedObservation}
           onChangeScale={setScale}
         />

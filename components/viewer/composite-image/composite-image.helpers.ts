@@ -1,5 +1,4 @@
-import { Filter, FilterConfig } from 'data/observations.types';
-import { hslToRgb } from 'utils/color/color.helpers';
+import { FilterConfig } from 'data/observations.types';
 
 import type {
   ShaderColorUniforms,
@@ -7,7 +6,7 @@ import type {
   ShaderLevelsUniforms,
   ShaderLevelsUniformValue,
   ShaderTextureUniforms,
-} from "components/composite-image/composite-image.types";
+} from "components/viewer/composite-image/composite-image.types";
 export const buildTextureUniforms = (
   textures: readonly THREE.Texture[],
   fallbackTexture: THREE.Texture

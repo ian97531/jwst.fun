@@ -1,4 +1,4 @@
-import CompositeImage from 'components/composite-image/CompositeImage';
+import CompositeImage from 'components/viewer/composite-image/CompositeImage';
 import { FilterConfig, Observation } from 'data/observations.types';
 import React, { useMemo, useRef, useState } from 'react';
 

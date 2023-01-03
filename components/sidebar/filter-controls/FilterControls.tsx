@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import ButtonSwitch from 'components/button-switch/ButtonSwitch';
-import HueSlider from 'components/slider/HueSlider';
-import LevelsSlider from 'components/slider/LevelsSlider';
-import LightnessSlider from 'components/slider/LightnessSlider';
-import SaturationSlider from 'components/slider/SaturationSlider';
+import ButtonSwitch from 'components/library/button-switch/ButtonSwitch';
+import HueSlider from 'components/library/slider/HueSlider';
+import LevelsSlider from 'components/library/slider/LevelsSlider';
+import LightnessSlider from 'components/library/slider/LightnessSlider';
+import SaturationSlider from 'components/library/slider/SaturationSlider';
 import React, { useCallback, useState } from 'react';
 
 import styles from './FilterControls.module.css';

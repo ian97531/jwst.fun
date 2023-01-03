@@ -1,7 +1,7 @@
-import { EMPTY_TEXTURE_URL } from 'components/composite-image/composite-image.constants';
+import { EMPTY_TEXTURE_URL } from 'components/viewer/composite-image/composite-image.constants';
 import {
     buildColorUniforms, buildLevelsUniforms, buildTextureUniforms
-} from 'components/composite-image/composite-image.helpers';
+} from 'components/viewer/composite-image/composite-image.helpers';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { isDomRuntime } from 'utils/runtime/runtime.helpers';
@@ -12,7 +12,7 @@ import fragmentShader from './fragment-shader.glsl';
 import vertexShader from './vertex-shader.glsl';
 
 import type { FilterConfig, Observation } from "data/observations.types";
-import type { ShaderUniforms } from "components/composite-image/composite-image.types";
+import type { ShaderUniforms } from "components/viewer/composite-image/composite-image.types";
 export type Props = {
   filterConfigs: Record<string, FilterConfig>;
   initialScale: number;
