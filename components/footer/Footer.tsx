@@ -1,11 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 
-import { Inconsolata } from '@next/font/google';
-
 import styles from './Footer.module.css';
-
-const inconsolata = Inconsolata({ subsets: ["latin"] });
 
 export type Props = {
   className?: string;
@@ -19,7 +15,7 @@ const Footer = (props: Props) => {
 
   const zoom = scale * 100;
   return (
-    <footer className={clsx(styles.Footer, inconsolata.className, className)}>
+    <footer className={clsx(styles.Footer, className)}>
       <span>
         {imageWidth}px &#215; {imageHeight}px
       </span>

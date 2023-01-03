@@ -15,12 +15,14 @@ import type { FilterConfig, Observation } from "data/observations.types";
 import type { ShaderUniforms } from "components/viewer/composite-image/composite-image.types";
 export type Props = {
   filterConfigs: Record<string, FilterConfig>;
+  initialPosition: [number, number];
   initialScale: number;
   isolateFilter?: string | null;
   observation: Observation;
   onChangeScale: (scale: number) => void;
   onDragStart: () => void;
   onDragEnd: () => void;
+  onImageRendered: () => void;
   onPointerEnter: (evt: ThreeEvent<PointerEvent>) => void;
   onPointerLeave: (evt: ThreeEvent<PointerEvent>) => void;
 };
@@ -28,67 +30,30 @@ export type Props = {
 const CompositeImage = (props: Props) => {
   const {
     filterConfigs,
+    initialPosition,
     initialScale,
     isolateFilter = null,
     observation,
     onChangeScale,
     onDragStart,
     onDragEnd,
+    onImageRendered,
     onPointerEnter,
     onPointerLeave,
   } = props;
 
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const meshRef = useRef<THREE.Mesh>(null);
+  const renderCountRef = useRef(0);
+  const initialScaleRef = useRef(initialScale);
 
   const { invalidate, gl } = useThree();
   const three = useThree();
 
-  const [emptyTexture, ...filterTextures] = useLoader(
-    THREE.TextureLoader,
-    [
-      EMPTY_TEXTURE_URL,
-      ...observation.filters.map((filter) => filter.imageUrl),
-    ],
-    (xhr) => {
-      xhr.manager.onProgress = (url, loaded, total) =>
-        console.log(url, loaded, total);
-    }
-  );
-
-  const initialPosition = useMemo(() => {
-    if (isDomRuntime()) {
-      const browserViewportHeight =
-        window.visualViewport?.height ?? document.body.clientHeight;
-      const browserViewportWidth =
-        window.visualViewport?.width ?? document.body.clientWidth;
-
-      const computedStyle = window.getComputedStyle(document.documentElement);
-      const headerHeight = Number.parseInt(
-        computedStyle.getPropertyValue("--header-height"),
-        10
-      );
-      const footerHeight = Number.parseInt(
-        computedStyle.getPropertyValue("--footer-height"),
-        10
-      );
-
-      const sidebarWidth = Number.parseInt(
-        computedStyle.getPropertyValue("--sidebar-width"),
-        10
-      );
-      const canvasViewportHeight =
-        browserViewportHeight - footerHeight - headerHeight;
-      const canvasViewportCenterY = headerHeight + canvasViewportHeight / 2;
-      const canvasViewportCenterX = (browserViewportWidth - sidebarWidth) / 2;
-
-      const offsetX = browserViewportWidth / 2 - canvasViewportCenterX;
-      const offsetY = browserViewportHeight / 2 - canvasViewportCenterY;
-      return new THREE.Vector3(-offsetX, offsetY, 0);
-    } else {
-      return new THREE.Vector3(0, 0, 0);
-    }
-  }, []);
+  const [emptyTexture, ...filterTextures] = useLoader(THREE.TextureLoader, [
+    EMPTY_TEXTURE_URL,
+    ...observation.filters.map((filter) => filter.imageUrl),
+  ]);
 
   const isolateFilterIndex = useMemo(() => {
     return isolateFilter !== null
@@ -110,7 +75,16 @@ const CompositeImage = (props: Props) => {
     [] // No dependencies. Updates to the color uniforms are performed in useFrame.
   );
 
+  const initialPositionVector = useMemo(
+    () => new THREE.Vector3(...initialPosition, 0),
+    []
+  );
+
   useFrame(() => {
+    renderCountRef.current++;
+    if (renderCountRef.current > 1) {
+      onImageRendered?.();
+    }
     const material = materialRef.current;
     if (material) {
       const configs = observation.filters.map(
@@ -192,8 +166,8 @@ const CompositeImage = (props: Props) => {
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
       ref={meshRef}
-      position={initialPosition}
-      scale={initialScale}
+      position={initialPositionVector}
+      scale={initialScaleRef.current}
     >
       <planeGeometry args={observation.imageSizePixels} />
       <shaderMaterial

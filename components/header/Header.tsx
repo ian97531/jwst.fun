@@ -5,12 +5,9 @@ import SelectItem from 'components/library/select/SelectItem';
 import { Observation } from 'data/observations.types';
 import React, { useCallback } from 'react';
 
-import { Inconsolata } from '@next/font/google';
 import { animated, config, to, useSpring } from '@react-spring/web';
 
 import styles from './Header.module.css';
-
-const inconsolata = Inconsolata({ subsets: ["latin"] });
 
 export type Props = {
   className?: string;
@@ -42,7 +39,7 @@ const Header = (props: Props) => {
   }, [angleApi]);
 
   return (
-    <header className={clsx(styles.Header, inconsolata.className, className)}>
+    <header className={clsx(styles.Header, className)}>
       <div className={styles.logo} onPointerEnter={spin}>
         <animated.img
           srcSet="/logo-small/jwst-logo.png, /logo-small/jwst-logo@2x.png 2x, /logo-small/jwst-logo@3x.png 3x"

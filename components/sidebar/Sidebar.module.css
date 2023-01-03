@@ -11,14 +11,7 @@
   overflow-y: overlay;
   scrollbar-color: var(--scrollbar-foreground-color)
     var(--scrollbar-background-color);
-  transition: translate 0.3s ease-in-out, opacity 0.3s ease-in-out;
   width: var(--sidebar-width);
-  will-change: opacity translate;
-}
-
-.hidden {
-  opacity: 0;
-  translate: 100% 0;
 }
 
 .Sidebar::-webkit-scrollbar {
