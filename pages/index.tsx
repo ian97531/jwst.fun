@@ -172,7 +172,7 @@ export default function Home() {
                   !filterAdjustmentsOpen && styles.centerLoading
                 )}
               >
-                Loading...
+                Loading JWST NIRCam filter data...
               </div>
             </div>
             <Sidebar

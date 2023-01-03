@@ -1,7 +1,6 @@
 .Footer {
   align-items: center;
   backdrop-filter: var(--nav-backdrop);
-  border: var(--nav-border);
   color: white;
   display: flex;
   flex-direction: row;

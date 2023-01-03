@@ -1,6 +1,5 @@
 .Header {
   backdrop-filter: var(--nav-backdrop);
-  border: var(--nav-border);
   color: white;
   display: grid;
   grid-template-columns:
@@ -8,7 +7,6 @@
     minmax(250px, auto) minmax(min-content, calc(var(--header-height) * 4));
   align-items: center;
   font-size: 20px;
-  width: 100vw;
 }
 
 @media (max-width: 700px) {

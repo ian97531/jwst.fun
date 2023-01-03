@@ -21,8 +21,10 @@ const Footer = (props: Props) => {
       </span>
       <span>Zoom: {zoom.toFixed(1)}%</span>
       <span className={styles.credits}>
-        Created by Ian White for Matthew Vernacchia and Commonwealth Fusion
-        Systems
+        Created for Matthew Vernacchia and Commonwealth Fusion Systems by{" "}
+        <a href="https://github.com/ian97531" target="_blank">
+          Ian White
+        </a>
       </span>
     </footer>
   );

@@ -22,6 +22,8 @@
   --scrollbar-background-color: transparent;
   --scrollbar-border: 2px solid rgb(34, 34, 34);
   --scrollbar-size: 10px;
+
+  --white10: rgba(114, 114, 114);
 }
 
 *,
