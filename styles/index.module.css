@@ -23,8 +23,7 @@
 
 .progressPane {
   align-items: center;
-  backdrop-filter: blur(10px) brightness(0.8);
-
+  backdrop-filter: blur(100px) brightness(0) grayscale(100%);
   font-size: var(--font-size-extra-large);
   grid-column: 1;
   grid-row: 1;
@@ -32,7 +31,7 @@
   height: 100%;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.4s linear;
   width: 100%;
   will-change: opacity;
 }

@@ -1,29 +1,35 @@
 .ButtonSwitch {
   border-radius: var(--border-radius);
   background-color: var(--whiteA6);
-  border: 1px solid var(--whiteA11);
+  border: 1px solid var(--whiteA8);
+  box-shadow: 0 0 0px 0px var(--whiteA6), inset 0 0 2px 1px var(--whiteA3);
   cursor: pointer;
-  color: var(--whiteA11);
+  color: var(--whiteA10);
   overflow: hidden;
   text-overflow: ellipsis;
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out,
-    color 0.2s ease-in-out;
+    box-shadow 0.18s ease-in-out, color 0.2s ease-in-out,
+    text-shadow 0.18s ease-in-out;
+  text-shadow: 0 0 0px white;
   white-space: nowrap;
-  will-change: background-color color border-color;
+  will-change: background-color border-color box-shadow color text-shadow;
 }
 
 .ButtonSwitch:hover {
-  border-color: var(--whiteA12);
+  border-color: var(--whiteA11);
   color: var(--whiteA12);
 }
 
 .ButtonSwitch.active {
-  background-color: var(--whiteA12);
+  border-color: var(--whiteA12);
   color: black;
+  box-shadow: 0 0 6px 3px var(--whiteA7), inset 0 0 15px 15px var(--whiteA11);
+  text-shadow: 0 0 5px white;
 }
 
 .ButtonSwitch.active:hover {
-  border-color: var(--whiteA12);
+  border-color: white;
+  background-color: white;
   color: black;
 }
 
