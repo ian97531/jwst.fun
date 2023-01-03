@@ -1,14 +1,19 @@
 import clsx from 'clsx';
 import Footer from 'components/footer/Footer';
 import Header from 'components/header/Header';
+import Button from 'components/library/button/Button';
 import FilterControls from 'components/sidebar/filter-controls/FilterControls';
 import Sidebar from 'components/sidebar/Sidebar';
 import Viewport from 'components/viewer/viewport/Viewport';
 import { ObservationId, OBSERVATIONS } from 'data/observations.constants';
-import { FilterConfig } from 'data/observations.types';
+import { Filter, FilterConfig } from 'data/observations.types';
 import Head from 'next/head';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from 'styles/index.module.css';
+import {
+    deleteStoredFilterConfigsForObservationId, getDefaultFilterConfigsForObservationId,
+    getFilterConfigsForObservationId
+} from 'utils/filter-configs/filter-config.helpers';
 import { isDomRuntime } from 'utils/runtime/runtime.helpers';
 
 import { Inconsolata } from '@next/font/google';
@@ -18,99 +23,41 @@ const inconsolata = Inconsolata({ subsets: ["latin"] });
 const INITIAL_SELECTED_OBSERVATION_ID: ObservationId = "jw02731";
 
 export default function Home() {
-  const [scale, setScale] = useState(0);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [shouldShowProgress, setShouldShowProgress] = useState(true);
-  const [filterAdjustmentsOpen, setIsFilterAdjustmentsOpen] = useState(true);
+  const [viewportScale, setViewportScale] = useState(0);
+
+  // If the user has enabled the "Isolate" switch on one of the filters, the
+  // name of that filter is stored here, otherwise this value is null.
   const [isolatedFilterName, setIsolatedFilterName] = useState<string | null>(
     null
   );
-  const [selectedObservationName, setSelectedObservationName] =
+
+  const [selectedObservationId, setSelectedObservationId] =
     useState<ObservationId>(INITIAL_SELECTED_OBSERVATION_ID);
+  const selectedObservation = OBSERVATIONS[selectedObservationId];
 
-  const selectedObservation = OBSERVATIONS[selectedObservationName];
-
+  // The current filter adjustment settings for each filter.
   const [filterConfigs, setFilterControlConfigs] = useState(() =>
-    Object.fromEntries(
-      selectedObservation.filters.map(({ name, defaultConfig }) => [
-        name,
-        defaultConfig,
-      ])
-    )
+    getDefaultFilterConfigsForObservationId(selectedObservationId, OBSERVATIONS)
   );
-
-  const [initialScale, initialPosition] = useMemo<
-    [number, [number, number]]
-  >(() => {
-    if (isDomRuntime()) {
-      const browserViewportHeight =
-        window.visualViewport?.height ?? document.body.clientHeight;
-      const browserViewportWidth =
-        window.visualViewport?.width ?? document.body.clientWidth;
-
-      const computedStyle = window.getComputedStyle(document.documentElement);
-      const headerHeight = Number.parseInt(
-        computedStyle.getPropertyValue("--header-height"),
-        10
-      );
-      const footerHeight = Number.parseInt(
-        computedStyle.getPropertyValue("--footer-height"),
-        10
-      );
-
-      const sidebarWidth = filterAdjustmentsOpen
-        ? Number.parseInt(computedStyle.getPropertyValue("--sidebar-width"), 10)
-        : 0;
-      const canvasViewportHeight =
-        browserViewportHeight - footerHeight - headerHeight;
-      const canvasViewportWidth = browserViewportWidth - sidebarWidth;
-
-      const heightRatio =
-        (canvasViewportHeight - 30) / selectedObservation.imageSizePixels[1];
-      const widthRatio =
-        (canvasViewportWidth - 30) / selectedObservation.imageSizePixels[0];
-
-      const scale = Math.min(heightRatio, widthRatio, 1);
-
-      const canvasViewportCenterY = headerHeight + canvasViewportHeight / 2;
-      const canvasViewportCenterX = (browserViewportWidth - sidebarWidth) / 2;
-
-      const offsetX = browserViewportWidth / 2 - canvasViewportCenterX;
-      const offsetY = browserViewportHeight / 2 - canvasViewportCenterY;
-
-      return [scale, [-offsetX, offsetY]];
-    } else {
-      return [0, [0, 0]];
-    }
-  }, [filterAdjustmentsOpen, selectedObservationName]);
 
   const updateConfigForFilter = useCallback(
-    (name: string, updatedFilterConfig: FilterConfig) => {
+    (filterName: string, updatedFilterConfig: FilterConfig) => {
       setFilterControlConfigs((prev) => ({
         ...prev,
-        [name]: updatedFilterConfig,
+        [filterName]: updatedFilterConfig,
       }));
+
+      // Attempt to store the filter adjustments to localstorage.
+      try {
+        localStorage.setItem(
+          `${selectedObservationId}-${filterName}`,
+          JSON.stringify(updatedFilterConfig)
+        );
+      } catch {}
     },
     []
-  );
-
-  const updateSelectedObservation = useCallback((name: string) => {
-    setSelectedObservationName(name);
-
-    const newFilterConfigs = Object.fromEntries(
-      OBSERVATIONS[name].filters.map(({ name, defaultConfig }) => [
-        name,
-        defaultConfig,
-      ])
-    );
-    setFilterControlConfigs(newFilterConfigs);
-  }, []);
-
-  const observationOptions = useMemo(
-    () =>
-      Object.fromEntries(
-        Object.entries(OBSERVATIONS).map(([id, { name }]) => [id, name])
-      ),
-    [OBSERVATIONS]
   );
 
   const isolateFilter = useCallback(
@@ -130,11 +77,93 @@ export default function Home() {
     }
   }, [shouldShowProgress]);
 
+  const observationMenuOptions = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(OBSERVATIONS).map(([id, { name }]) => [id, name])
+      ),
+    [OBSERVATIONS]
+  );
+
+  const resetFilterOptions = useCallback(() => {
+    deleteStoredFilterConfigsForObservationId(
+      selectedObservationId,
+      OBSERVATIONS
+    );
+    setFilterControlConfigs(
+      getDefaultFilterConfigsForObservationId(
+        selectedObservationId,
+        OBSERVATIONS
+      )
+    );
+  }, [selectedObservationId]);
+
+  // Build the initial viewport scale and image position to ensure that
+  // then the image is rendered, it's centered inside the available viewport
+  // and not overlapped by the header, footer, or sidebar.
+  const [initialViewportScale, initialImagePosition] = useMemo<
+    [number, [number, number]]
+  >(() => {
+    if (isDomRuntime()) {
+      // Find the width and height of the browser viewport.
+      const browserViewportHeight =
+        window.visualViewport?.height ?? document.body.clientHeight;
+      const browserViewportWidth =
+        window.visualViewport?.width ?? document.body.clientWidth;
+
+      // Find the header, footer, and sidebar dimensions.
+      const computedStyle = window.getComputedStyle(document.documentElement);
+      const headerHeight = Number.parseInt(
+        computedStyle.getPropertyValue("--header-height"),
+        10
+      );
+      const footerHeight = Number.parseInt(
+        computedStyle.getPropertyValue("--footer-height"),
+        10
+      );
+      const sidebarWidth = isSidebarOpen
+        ? Number.parseInt(computedStyle.getPropertyValue("--sidebar-width"), 10)
+        : 0;
+
+      // Compute the dimensions of the available canvas area that's not
+      // obscured by the header footer or sidebar.
+      const canvasViewportHeight =
+        browserViewportHeight - footerHeight - headerHeight;
+      const canvasViewportWidth = browserViewportWidth - sidebarWidth;
+
+      // Find the correct scale to start the image off with given the available
+      // canvas dimensions and the dimensions of the image to render.
+      const imageHeightRatio =
+        (canvasViewportHeight - 30) / selectedObservation.imageSizePixels[1];
+      const imageWidthRatio =
+        (canvasViewportWidth - 30) / selectedObservation.imageSizePixels[0];
+      const scale = Math.min(imageHeightRatio, imageWidthRatio, 1);
+
+      // Find the x and y offset from the browser viewport center that
+      // represents the center of the available canvas where the image should be
+      // positioned.
+      const canvasViewportCenterY = headerHeight + canvasViewportHeight / 2;
+      const canvasViewportCenterX = (browserViewportWidth - sidebarWidth) / 2;
+      const offsetX = browserViewportWidth / 2 - canvasViewportCenterX;
+      const offsetY = browserViewportHeight / 2 - canvasViewportCenterY;
+
+      return [scale, [-offsetX, offsetY]];
+    } else {
+      // During server-side rendering, skip the calculations above.
+      return [0, [0, 0]];
+    }
+  }, [isSidebarOpen, selectedObservationId]);
+
   useEffect(() => {
+    // If the observation is changed, show progress, update the viewport scale,
+    // and clear any isolated filter settings, and initialize the filter settings.
     setShouldShowProgress(true);
-    setScale(initialScale);
+    setViewportScale(initialViewportScale);
     setIsolatedFilterName(null);
-  }, [selectedObservationName]);
+    setFilterControlConfigs(
+      getFilterConfigsForObservationId(selectedObservationId, OBSERVATIONS)
+    );
+  }, [selectedObservationId]);
 
   return (
     <>
@@ -152,11 +181,11 @@ export default function Home() {
         <nav className={styles.nav}>
           <Header
             className={styles.header}
-            selectedObservation={selectedObservationName}
-            filterAdjustmentOpen={filterAdjustmentsOpen}
-            observationOptions={observationOptions}
-            onSelectObservation={updateSelectedObservation}
-            onToggleFilterAdjustments={setIsFilterAdjustmentsOpen}
+            selectedObservationId={selectedObservationId}
+            filterAdjustmentOpen={isSidebarOpen}
+            observationOptions={observationMenuOptions}
+            onSelectObservation={setSelectedObservationId}
+            onToggleFilterAdjustments={setIsSidebarOpen}
           />
 
           <section className={styles.mainArea}>
@@ -169,7 +198,7 @@ export default function Home() {
               <div
                 className={clsx(
                   styles.loading,
-                  !filterAdjustmentsOpen && styles.centerLoading
+                  !isSidebarOpen && styles.centerLoading
                 )}
               >
                 Loading JWST NIRCam filter data...
@@ -178,7 +207,7 @@ export default function Home() {
             <Sidebar
               className={clsx(
                 styles.sidebar,
-                !filterAdjustmentsOpen && styles.hideSidebar
+                !isSidebarOpen && styles.hideSidebar
               )}
             >
               {Object.entries(filterConfigs).map(([name, settings]) => (
@@ -194,25 +223,31 @@ export default function Home() {
                   onUpdateConfig={updateConfigForFilter}
                 />
               ))}
+              <Button
+                className={styles.resetButton}
+                onClick={resetFilterOptions}
+              >
+                Reset to defaults
+              </Button>
             </Sidebar>
           </section>
           <Footer
             className={styles.footer}
             imageHeight={selectedObservation.imageSizePixels[1]}
             imageWidth={selectedObservation.imageSizePixels[0]}
-            scale={scale}
+            scale={viewportScale}
           />
         </nav>
 
         <Viewport
           className={styles.viewport}
           filterConfigs={filterConfigs}
-          initialPosition={initialPosition}
-          initialScale={initialScale}
-          isolateFilter={isolatedFilterName}
-          key={selectedObservationName}
-          observation={selectedObservation}
-          onChangeScale={setScale}
+          initialImagePosition={initialImagePosition}
+          initialScale={initialViewportScale}
+          isolateFilterName={isolatedFilterName}
+          key={selectedObservationId}
+          currentObservation={selectedObservation}
+          onChangeScale={setViewportScale}
           onImageRendered={finishLoad}
         />
       </main>

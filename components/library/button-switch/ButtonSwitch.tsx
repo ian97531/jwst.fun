@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import Button from 'components/library/button/Button';
 import React from 'react';
 
 import styles from './ButtonSwitch.module.css';
@@ -21,17 +22,13 @@ const ButtonSwitch = (props: Props) => {
   } = props;
 
   return (
-    <button
-      className={clsx(
-        styles.ButtonSwitch,
-        styles[variant],
-        on && styles.active,
-        className
-      )}
+    <Button
+      className={clsx(styles.ButtonSwitch, on && styles.active, className)}
       onClick={() => onToggle?.(!on)}
+      variant={variant}
     >
       {children}
-    </button>
+    </Button>
   );
 };
 

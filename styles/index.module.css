@@ -86,3 +86,9 @@
   border-top: var(--nav-border);
   pointer-events: all;
 }
+
+.resetButton {
+  align-self: center;
+  flex-shrink: 0;
+  margin: var(--nav-padding);
+}

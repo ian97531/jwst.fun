@@ -29,6 +29,7 @@ float blend_screen(float base, float blend) {
 	return (1.0 - ((1.0 - base) * (1.0 - blend)));
 }
 
+// Use the screen blend mode to combine the base and blend vectors provided.
 vec3 blend_screen(vec3 base, vec3 blend) {
 	return vec3(blend_screen(base.r, blend.r), blend_screen(base.g, blend.g), blend_screen(base.b, blend.b));
 }
@@ -45,6 +46,7 @@ float hue_to_rgb(float float_1, float float_2, float hue) {
 	return f_component;
 }
 
+// Convert the provided rgb values in the provided vec3 to hsl values in a vec3.
 vec3 rgb_to_hsl(vec3 color) {
 	vec3 f_hsl;
 	float f_min = min(min(color.r, color.g), color.b); //Min. value of RGB
@@ -75,6 +77,7 @@ vec3 rgb_to_hsl(vec3 color) {
 	return f_hsl;
 }
 
+// Convert the provided hsl values in the provided vec3 to rgb values in a vec3.
 vec3 hsl_to_rgb(vec3 hsl) {
 	vec3 f_rgb;
 	if (hsl.y == 0.0) f_rgb = vec3(hsl.z); 
@@ -92,16 +95,21 @@ vec3 hsl_to_rgb(vec3 hsl) {
 	return f_rgb;
 }
 
+// Apply the hue and saturation from the provided color_hsl vec3 to the
+// target_rgb color and return the colorized value as an rbg vec3.
 vec3 colorize(vec3 target_rgb, vec3 color_hsl) {
 	vec3 f_target_rgb_hsl = rgb_to_hsl(target_rgb);
 	vec3 f_colorized_hsl = vec3(color_hsl.r, color_hsl.g, f_target_rgb_hsl.b);
 	return hsl_to_rgb(f_colorized_hsl);
 }
 
+// Apply the provided gamma value to color vec3.
 vec3 correct_gamma(vec3 color, float gamma)	{
 	return vec3(pow(color.r, 1.0 / gamma), pow(color.g, 1.0 / gamma), pow(color.b, 1.0 / gamma));
 }							
 
+// Transform the black and white levels of the provided color using the gamma
+// and min/max input and output colors provided.
 vec3 adjust_levels(vec3 color, float gamma, vec3 min_input, vec3 max_input, vec3 min_output, vec3 max_output) {
 	vec3 f_color_input_adjusted = min(max(color - vec3(min_input), vec3(0.0)) / (vec3(max_input) - vec3(min_input)), vec3(1.0));
 	vec3 f_color_input_adjusted_gamma = correct_gamma(f_color_input_adjusted, 1.0);

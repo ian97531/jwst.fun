@@ -1,7 +1,7 @@
 .Sidebar {
   align-content: flex-end;
   backdrop-filter: var(--nav-backdrop);
-
+  display: flex;
   flex-direction: column;
   flex-grow: 1;
   min-height: fit-content;

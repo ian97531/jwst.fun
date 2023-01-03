@@ -15,10 +15,10 @@ import type { FilterConfig, Observation } from "data/observations.types";
 import type { ShaderUniforms } from "components/viewer/composite-image/composite-image.types";
 export type Props = {
   filterConfigs: Record<string, FilterConfig>;
-  initialPosition: [number, number];
+  initialImagePosition: [number, number];
   initialScale: number;
-  isolateFilter?: string | null;
-  observation: Observation;
+  isolateFilterName?: string | null;
+  currentObservation: Observation;
   onChangeScale: (scale: number) => void;
   onDragStart: () => void;
   onDragEnd: () => void;
@@ -30,10 +30,10 @@ export type Props = {
 const CompositeImage = (props: Props) => {
   const {
     filterConfigs,
-    initialPosition,
+    initialImagePosition,
     initialScale,
-    isolateFilter = null,
-    observation,
+    isolateFilterName = null,
+    currentObservation,
     onChangeScale,
     onDragStart,
     onDragEnd,
@@ -48,38 +48,47 @@ const CompositeImage = (props: Props) => {
   const initialScaleRef = useRef(initialScale);
 
   const { invalidate, gl } = useThree();
-  const three = useThree();
 
+  // Load the filter images as textures.
   const [emptyTexture, ...filterTextures] = useLoader(THREE.TextureLoader, [
     EMPTY_TEXTURE_URL,
-    ...observation.filters.map((filter) => filter.imageUrl),
+    ...currentObservation.filters.map((filter) => filter.imageUrl),
   ]);
 
-  const isolateFilterIndex = useMemo(() => {
-    return isolateFilter !== null
-      ? observation.filters.findIndex(({ name }) => name === isolateFilter) + 1
+  // If isolateFilterName is set, determine the index of the layer to isolate.
+  const isolateFilterLayerIndex = useMemo(() => {
+    return isolateFilterName !== null
+      ? currentObservation.filters.findIndex(
+          ({ name }) => name === isolateFilterName
+        ) + 1
       : null;
-  }, [isolateFilter]);
+  }, [isolateFilterName]);
 
-  const shaderUniforms: ShaderUniforms = useMemo(
+  // Generate the initial uniform values to provide to the vertex and fragment
+  // shaders. This memo has no dependencies because it should only be generated
+  // once when the scene is set up. Modifications to the uniform values happen
+  // within the useFrame hook below.
+  const initialShaderUniforms: ShaderUniforms = useMemo(
     () => {
-      const configs = observation.filters.map(
+      const configs = currentObservation.filters.map(
         ({ name }) => filterConfigs[name]
       );
       return {
         ...buildTextureUniforms(filterTextures, emptyTexture),
-        ...buildColorUniforms(configs, isolateFilterIndex),
+        ...buildColorUniforms(configs, isolateFilterLayerIndex),
         ...buildLevelsUniforms(configs),
       };
     },
-    [] // No dependencies. Updates to the color uniforms are performed in useFrame.
+    [] // No dependencies (see comment above).
   );
 
   const initialPositionVector = useMemo(
-    () => new THREE.Vector3(...initialPosition, 0),
+    () => new THREE.Vector3(...initialImagePosition, 0),
     []
   );
 
+  // This function is executed before each new frame is rendered. It updates the
+  // uniform color and level values based on the current filter configs.
   useFrame(() => {
     renderCountRef.current++;
     if (renderCountRef.current > 1) {
@@ -87,10 +96,13 @@ const CompositeImage = (props: Props) => {
     }
     const material = materialRef.current;
     if (material) {
-      const configs = observation.filters.map(
+      const configs = currentObservation.filters.map(
         ({ name }) => filterConfigs[name]
       );
-      const newColorUniforms = buildColorUniforms(configs, isolateFilterIndex);
+      const newColorUniforms = buildColorUniforms(
+        configs,
+        isolateFilterLayerIndex
+      );
       const newLevelsUniforms = buildLevelsUniforms(configs);
 
       const currentUniforms = material.uniforms as ShaderUniforms;
@@ -148,6 +160,7 @@ const CompositeImage = (props: Props) => {
   );
 
   useEffect(() => {
+    // Update the zoom level based on mouse wheel changes.
     const handleWheel = (evt: WheelEvent) => {
       if (meshRef.current) {
         meshRef.current.scale.multiplyScalar(1 + evt.deltaY / 5000);
@@ -169,11 +182,11 @@ const CompositeImage = (props: Props) => {
       position={initialPositionVector}
       scale={initialScaleRef.current}
     >
-      <planeGeometry args={observation.imageSizePixels} />
+      <planeGeometry args={currentObservation.imageSizePixels} />
       <shaderMaterial
         ref={materialRef}
         fragmentShader={fragmentShader}
-        uniforms={shaderUniforms}
+        uniforms={initialShaderUniforms}
         vertexShader={vertexShader}
       />
     </mesh>

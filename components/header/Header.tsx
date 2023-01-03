@@ -13,9 +13,9 @@ export type Props = {
   className?: string;
   filterAdjustmentOpen: boolean;
   observationOptions: Record<string, string>;
-  onSelectObservation: (name: string) => void;
+  onSelectObservation: (id: string) => void;
   onToggleFilterAdjustments?: (newValue: boolean) => void;
-  selectedObservation: string;
+  selectedObservationId: string;
 };
 
 const Header = (props: Props) => {
@@ -25,7 +25,7 @@ const Header = (props: Props) => {
     observationOptions,
     onSelectObservation,
     onToggleFilterAdjustments,
-    selectedObservation,
+    selectedObservationId,
   } = props;
 
   const [{ angle }, angleApi] = useSpring(() => ({
@@ -56,7 +56,7 @@ const Header = (props: Props) => {
       <div className={styles.observation}>
         <Select
           menuClassName={styles.menu}
-          defaultValue={selectedObservation}
+          defaultValue={selectedObservationId}
           onValueChange={onSelectObservation}
         >
           {Object.entries(observationOptions).map(([id, name]) => (

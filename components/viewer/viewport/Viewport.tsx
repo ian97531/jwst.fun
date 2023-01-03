@@ -7,10 +7,10 @@ import { Canvas } from '@react-three/fiber';
 export type Props = {
   className?: string;
   filterConfigs: Record<string, FilterConfig>;
-  initialPosition: [number, number];
+  initialImagePosition: [number, number];
   initialScale: number;
-  isolateFilter?: string | null;
-  observation: Observation;
+  isolateFilterName?: string | null;
+  currentObservation: Observation;
   onChangeScale: (scale: number) => void;
   onImageRendered: () => void;
 };
@@ -19,10 +19,10 @@ const Viewport = (props: Props) => {
   const {
     className,
     filterConfigs,
-    initialPosition,
+    initialImagePosition,
     initialScale,
-    isolateFilter,
-    observation,
+    isolateFilterName,
+    currentObservation,
     onChangeScale,
     onImageRendered,
   } = props;
@@ -41,10 +41,10 @@ const Viewport = (props: Props) => {
       >
         <CompositeImage
           filterConfigs={filterConfigs}
-          initialPosition={initialPosition}
+          initialImagePosition={initialImagePosition}
           initialScale={initialScale}
-          isolateFilter={isolateFilter}
-          observation={observation}
+          isolateFilterName={isolateFilterName}
+          currentObservation={currentObservation}
           onChangeScale={onChangeScale}
           onDragStart={() => setIsDragging(true)}
           onDragEnd={() => setIsDragging(false)}
