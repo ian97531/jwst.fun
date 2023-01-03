@@ -8,6 +8,16 @@
   gap: 8px;
 }
 
+.SelectTrigger > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.SelectIcon {
+  flex-shrink: 0;
+}
+
 .SelectContent {
   backdrop-filter: var(--nav-backdrop);
   border: var(--nav-border);
