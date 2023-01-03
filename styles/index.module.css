@@ -42,7 +42,7 @@
 
 .loading {
   color: var(--whiteA12);
-  font-size: var(--font-size-extra-large);
+  font-size: var(--font-size-large);
   translate: calc(var(--sidebar-width) / -2);
 }
 
