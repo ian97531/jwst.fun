@@ -21,11 +21,8 @@ const Footer = (props: Props) => {
       </span>
       <span>Zoom: {zoom.toFixed(1)}%</span>
       <span className={styles.credits}>
-        Images from the{" "}
-        <a href="https://archive.stsci.edu/">
-          Space Telescope Science Institute
-        </a>
-        ; Created by Ian White
+        Created by Ian White for Matthew Vernacchia and Commonwealth Fusion
+        Systems
       </span>
     </footer>
   );
