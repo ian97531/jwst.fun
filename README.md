@@ -1,4 +1,4 @@
-# 🔭 JWST.fun
+# 🔭 [https://jwst.fun](JWST.fun)
 
 An web tool for mixing and colorizing images from JWST's NIRCam infrared images.
 WebGL and the GPU is used to composite 6 readings from different infrared
